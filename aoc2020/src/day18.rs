@@ -2,10 +2,10 @@ use crate::read_lines;
 
 pub fn part1() -> i64 {
     let lines = read_lines("./data/day18.txt");
-    lines.into_iter().map(|line| calc_expr_lazy(line)).sum()
+    lines.into_iter().map(|line| calc_expr_greedy(line)).sum()
 }
 
-fn calc_expr_lazy(line: String) -> i64 {
+fn calc_expr_greedy(line: String) -> i64 {
     let mut stack_op = vec!['('];
     let mut stack_num = vec![];
     let mut s = String::new();
@@ -61,18 +61,18 @@ fn push_num_lazy(stack_num: &mut Vec<i64>, stack_op: &mut Vec<char>, x: i64) {
 
 #[test]
 fn test_18_1() {
-    assert_eq!(26, calc_expr_lazy("2 * 3 + (4 * 5)".to_owned()));
+    assert_eq!(26, calc_expr_greedy("2 * 3 + (4 * 5)".to_owned()));
     assert_eq!(
         437,
-        calc_expr_lazy("5 + (8 * 3 + 9 + 3 * 4 * 3)".to_owned())
+        calc_expr_greedy("5 + (8 * 3 + 9 + 3 * 4 * 3)".to_owned())
     );
     assert_eq!(
         12240,
-        calc_expr_lazy("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))".to_owned())
+        calc_expr_greedy("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))".to_owned())
     );
     assert_eq!(
         13632,
-        calc_expr_lazy("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2".to_owned())
+        calc_expr_greedy("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2".to_owned())
     );
 }
 
