@@ -13,10 +13,12 @@ use std::path::Path;
 // mod day17;
 // mod day9;
 // mod day16;
-mod day18;
+// mod day18;
+mod day15;
 
 fn main() {
-    dbg!(day18::part2());
+    dbg!(day15::part1());
+    dbg!(day15::part2());
 }
 
 fn read_lines<P>(filename: P) -> Vec<String>
