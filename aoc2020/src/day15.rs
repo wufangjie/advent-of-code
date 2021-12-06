@@ -11,14 +11,13 @@ fn calc_nth_start_by(n: usize, start_lst: Vec<usize>) -> usize {
     for i in 0..m {
         spoken.insert(start_lst[i], i);
     }
-    let mut next = 0;
+    let mut nxt = 0;
     for i in m..n - 1 {
-        let pre = spoken.remove(&next);
-        spoken.insert(next, i);
-        next = if pre.is_none() { 0 } else { i - pre.unwrap() };
-    }
-    //dbg!(&next);
-    next
+	let cur = nxt;
+	nxt = if let Some(pre_i) = spoken.get(&cur) { i - pre_i } else { 0 };
+	spoken.insert(cur, i);
+    };
+    nxt
 }
 
 #[test]
