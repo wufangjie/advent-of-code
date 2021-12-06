@@ -11,12 +11,8 @@ fn calc_expr_greedy(line: String) -> i64 {
     let mut s = String::new();
     for c in line.chars() {
         match c {
-            '(' => {
-                stack_op.push('(');
-            }
-            '0'..='9' => {
-                s.push(c);
-            }
+            '(' => stack_op.push('('),
+            '0'..='9' => s.push(c),
             _ => {
                 if s != "" {
                     push_num_lazy(&mut stack_num, &mut stack_op, s.parse().unwrap());
@@ -42,9 +38,7 @@ fn calc_expr_greedy(line: String) -> i64 {
 
 fn push_num_lazy(stack_num: &mut Vec<i64>, stack_op: &mut Vec<char>, x: i64) {
     match stack_op[stack_op.len() - 1] {
-        '(' => {
-            stack_num.push(x);
-        }
+        '(' => stack_num.push(x),
         '+' => {
             let x = stack_num.pop().unwrap() + x;
             stack_num.push(x);
@@ -98,14 +92,10 @@ fn calc_expr_different(line: String) -> i64 {
     let mut stack_op = vec!['('];
     let mut stack_num = vec![];
     let mut s = String::new();
-    for c in line.chars() {
+    for c in line.chars().chain([')'].into_iter()) {
         match c {
-            '(' => {
-                stack_op.push('(');
-            }
-            '0'..='9' => {
-                s.push(c);
-            }
+            '(' => stack_op.push('('),
+            '0'..='9' => s.push(c),
             _ => {
                 if s != "" {
                     stack_num.push(s.parse().unwrap());
@@ -128,12 +118,6 @@ fn calc_expr_different(line: String) -> i64 {
                 }
             }
         }
-    }
-    if s != "" {
-        stack_num.push(s.parse().unwrap());
-    }
-    for _ in 1..stack_op.len() {
-        calc_binary(&mut stack_num, &mut stack_op);
     }
     stack_num[0]
 }
