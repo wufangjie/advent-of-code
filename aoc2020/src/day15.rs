@@ -13,10 +13,9 @@ fn calc_nth_start_by(n: usize, start_lst: Vec<usize>) -> usize {
     }
     let mut nxt = 0;
     for i in m..n - 1 {
-	let cur = nxt;
-	nxt = if let Some(pre_i) = spoken.get(&cur) { i - pre_i } else { 0 };
-	spoken.insert(cur, i);
-    };
+        let pre = spoken.insert(nxt, i);
+        nxt = if let Some(pre_i) = pre { i - pre_i } else { 0 };
+    }
     nxt
 }
 
@@ -32,6 +31,6 @@ fn test_15_1() {
 }
 
 pub fn part2() -> usize {
-    // release mode: 2 sec
+    // release mode: <2 sec
     calc_nth_start_by(30000000, vec![1, 2, 16, 19, 18, 0])
 }
