@@ -2,10 +2,10 @@ use std::fs::{self, File};
 use std::io::{self, BufRead, Read};
 use std::path::Path;
 
-mod day23;
+mod day25;
 
 fn main() {
-    dbg!(day23::part2());
+    dbg!(day25::part1());
 }
 
 fn read_lines<P>(filename: P) -> Vec<String>
