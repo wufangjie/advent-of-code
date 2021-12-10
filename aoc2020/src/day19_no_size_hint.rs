@@ -1,5 +1,5 @@
 use crate::read_lines;
-use itertools::Itertools;
+use itertools::Itertools; // (1..ns).combinations(nc - 1);
 use regex::Regex;
 use std::collections::{HashMap, HashSet};
 
