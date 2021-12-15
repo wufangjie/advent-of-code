@@ -58,27 +58,14 @@ pub fn part2() -> usize {
             return d;
         }
 
-        for ii in if i == 0 {
-            0..=1
-        } else if i < nrowN - 1 {
-            i - 1..=i + 1
-        } else {
-            i - 1..=i
-        } {
+        for ii in make_iter(i, nrowN - 1) {
             if lowest[ii][j] == 0 {
                 let d2 = d + find_real_risk(ii, j);
                 lowest[ii][j] = d2;
                 heap.push((d2, ii, j));
             }
         }
-
-        for jj in if j == 0 {
-            0..=1
-        } else if j < ncolN - 1 {
-            j - 1..=j + 1
-        } else {
-            j - 1..=j
-        } {
+        for jj in make_iter(j, ncolN - 1) {
             if lowest[i][jj] == 0 {
                 let d2 = d + find_real_risk(i, jj);
                 lowest[i][jj] = d2;
@@ -87,4 +74,15 @@ pub fn part2() -> usize {
         }
     }
     unreachable!();
+}
+
+#[inline]
+fn make_iter(i: usize, hi: usize) -> impl Iterator<Item = usize> {
+    if i == 0 {
+        0..=1
+    } else if i < hi {
+        i - 1..=i + 1
+    } else {
+        i - 1..=i
+    }
 }
