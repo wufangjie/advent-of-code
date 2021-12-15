@@ -3,10 +3,10 @@ use std::io::{self, BufRead, Read};
 use std::path::Path;
 //use std::env; // dbg!(env::current_dir());
 
-mod day14;
+mod day15;
 
 fn main() {
-    dbg!(day14::part2());
+    dbg!(day15::part2());
 }
 
 fn read_lines<P>(filename: P) -> Vec<String>
