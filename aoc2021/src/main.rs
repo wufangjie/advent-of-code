@@ -1,12 +1,12 @@
-use std::fs::File;
-use std::io::{self, BufRead, Read};
+use std::fs::{self, File};
+use std::io::{self, BufRead};
 use std::path::Path;
 //use std::env; // dbg!(env::current_dir());
 
-mod day15;
+mod day16;
 
 fn main() {
-    dbg!(day15::part2());
+    dbg!(day16::part2());
 }
 
 fn read_lines<P>(filename: P) -> Vec<String>
@@ -23,7 +23,5 @@ fn read_string<P>(filename: P) -> Result<String, io::Error>
 where
     P: AsRef<Path>,
 {
-    let mut s = String::new();
-    File::open(filename)?.read_to_string(&mut s)?;
-    Ok(s)
+    fs::read_to_string(filename)
 }
