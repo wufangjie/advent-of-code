@@ -62,8 +62,9 @@ pub fn part2() -> usize {
             127 - seg[4],
         ]
         .into_iter()
-        .enumerate()
-        .map(|(i, v)| (v, i))
+        .zip(0..10)
+        // .enumerate()
+        // .map(|(i, v)| (v, i))
         .collect();
 
         let mut res = 0;
