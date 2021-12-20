@@ -2,7 +2,7 @@ use crate::read_lines;
 use std::fmt;
 
 // 看到第一个是 #, 我以为是题目错了, 不然整个空间都亮了
-// 想了半天不明白, 最后发现只要最后一个是不是 #, 再过一次外面的空间会再次变暗
+// 想了半天不明白, 最后发现只要最后一个不是 #, 再变一次外面的空间就会再次变暗
 
 pub fn part1() {
     let mut iter = read_lines("./data/day20.txt").into_iter();
