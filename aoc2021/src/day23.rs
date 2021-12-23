@@ -17,6 +17,7 @@ const EPM: [usize; 4] = [1, 10, 100, 1000]; // energy cost per move
 //   #########	      #########
 
 // A* + greedy + prune(dead lock)
+// NOTE: I add backtrace for debuging, remove it will save some time and space
 
 pub fn part2() -> usize {
     let m = Machine::new([
