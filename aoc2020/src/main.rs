@@ -18,9 +18,6 @@ where
         .collect()
 }
 
-fn read_string<P>(filename: P) -> Result<String, io::Error>
-where
-    P: AsRef<Path>,
-{
+fn read_string(filename: impl AsRef<Path>) -> Result<String, io::Error> {
     fs::read_to_string(filename)
 }
