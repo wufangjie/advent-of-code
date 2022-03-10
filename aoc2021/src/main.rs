@@ -3,10 +3,10 @@ use std::io::{self, BufRead};
 use std::path::Path;
 //use std::env; // dbg!(env::current_dir());
 
-mod day25;
+mod day16;
 
 fn main() {
-    dbg!(day25::part1());
+    dbg!(day16::part2());
 }
 
 fn read_lines<P>(filename: P) -> Vec<String>
@@ -19,9 +19,6 @@ where
         .collect()
 }
 
-fn read_string<P>(filename: P) -> Result<String, io::Error>
-where
-    P: AsRef<Path>,
-{
+fn read_string(filename: impl AsRef<Path>) -> Result<String, io::Error> {
     fs::read_to_string(filename)
 }
