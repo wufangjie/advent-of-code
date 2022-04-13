@@ -11,13 +11,21 @@ fn arranged() -> (usize, String) {
     let re = Regex::new(r"^([a-z ]+) \(contains ([a-z ,]+)\)").unwrap();
     let mut set_lst: Vec<HashSet<&str>> = vec![];
     let mut allergen_dct: HashMap<&str, Vec<usize>> = HashMap::new();
-    for i in 0..lines.len() {
-        let caps = re.captures(&lines[i]).unwrap();
+
+    for (i, line) in lines.iter().enumerate() {
+        let caps = re.captures(line).unwrap();
         set_lst.push(caps.get(1).unwrap().as_str().split(' ').collect());
         for s in caps.get(2).unwrap().as_str().split(", ") {
             (*allergen_dct.entry(s).or_insert(vec![])).push(i);
         }
     }
+    // for i in 0..lines.len() {
+    //     let caps = re.captures(&lines[i]).unwrap();
+    //     set_lst.push(caps.get(1).unwrap().as_str().split(' ').collect());
+    //     for s in caps.get(2).unwrap().as_str().split(", ") {
+    //         (*allergen_dct.entry(s).or_insert(vec![])).push(i);
+    //     }
+    // }
 
     let mut poss = HashMap::new();
     for (key, lst) in &allergen_dct {
@@ -40,7 +48,7 @@ fn arranged() -> (usize, String) {
                         break;
                     }
                 }
-                if val != "" {
+                if !val.is_empty() {
                     arranged.insert(val, *key);
                     for (k, v) in &mut left {
                         if poss.get(&k).unwrap().contains(&val) {
@@ -66,7 +74,7 @@ fn arranged() -> (usize, String) {
     (
         acc,
         temp.into_iter()
-            .map(|(x, y)| y)
+            .map(|(_x, y)| y)
             .collect::<Vec<&str>>()
             .join(","),
     )
@@ -74,4 +82,13 @@ fn arranged() -> (usize, String) {
 
 pub fn part2() -> String {
     arranged().1
+}
+
+#[test]
+fn test_21() {
+    assert_eq!(2162, part1());
+    assert_eq!(
+        "lmzg,cxk,bsqh,bdvmx,cpbzbx,drbm,cfnt,kqprv".to_string(),
+        part2()
+    );
 }

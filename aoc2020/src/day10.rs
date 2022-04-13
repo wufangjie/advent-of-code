@@ -6,7 +6,7 @@ pub fn part1() -> usize {
         .into_iter()
         .map(|x| x.parse().unwrap())
         .collect();
-    adapters.sort();
+    adapters.sort_unstable();
     let mut pre = 0;
     let mut diff = [0, 0, 0, 0];
     for v in adapters {
@@ -21,7 +21,7 @@ pub fn part2() -> usize {
         .into_iter()
         .map(|x| x.parse().unwrap())
         .collect();
-    adapters.sort();
+    adapters.sort_unstable();
     let mut counter = Counter::new(adapters);
     counter.count(0, 0)
 }
@@ -31,7 +31,7 @@ pub fn part2_dp() -> usize {
         .into_iter()
         .map(|x| x.parse().unwrap())
         .collect();
-    adapters.sort();
+    adapters.sort_unstable();
 
     let n = adapters.len();
     let mut dp = vec![0; n];
@@ -90,4 +90,11 @@ impl Counter {
             self.count(self.adapters[i], i + 1) + self.count(pre, i + 1)
         }
     }
+}
+
+#[test]
+fn test_10() {
+    assert_eq!(2070, part1());
+    assert_eq!(24179327893504, part2());
+    assert_eq!(24179327893504, part2_dp());
 }

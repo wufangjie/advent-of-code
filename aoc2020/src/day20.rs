@@ -8,7 +8,7 @@ const M: usize = 12; // image edge's tiles (count)
 const MN: usize = M * (N - 2); // image edge's pixels
 const CW: [Pos; 4] = [Pos::Up, Pos::Right, Pos::Down, Pos::Left];
 
-type f1_2 = fn(usize) -> (usize, usize);
+type F1_2 = fn(usize) -> (usize, usize);
 //type f2_2 = fn(usize, usize) -> (usize, usize);
 
 // NOTE: The borders of each tile are not part of the actual image;
@@ -38,7 +38,7 @@ enum Pos {
 //     }
 // }
 
-pub fn part1() {
+pub fn part1() -> usize {
     let lines = read_lines("./data/day20.txt");
     let (tile_ids, urdls) = get_tiles_and_urdls(&lines);
 
@@ -60,14 +60,14 @@ pub fn part1() {
             }
         }
         if count_edge == 2 {
-            dbg!(i);
+            // dbg!(i);
             res *= tile_ids[i];
         }
     }
-    dbg!(res);
+    res
 }
 
-fn get_tiles_and_urdls(lines: &Vec<String>) -> (Vec<usize>, Vec<[u32; 4]>) {
+fn get_tiles_and_urdls(lines: &[String]) -> (Vec<usize>, Vec<[u32; 4]>) {
     // only for part1
     let re_num = Regex::new(r"(\d+)").unwrap();
     let mut tile_ids: Vec<usize> = vec![];
@@ -122,7 +122,7 @@ fn get_reverse_edge(mut d: u32) -> u32 {
     // only for part1
     let mut ret = 0;
     for i in 0..N {
-        ret |= (d & 1) << N - i - 1;
+        ret |= (d & 1) << (N - i - 1);
         d >>= 1;
     }
     ret as u32
@@ -137,23 +137,34 @@ pub fn part2() -> usize {
 
     let mut count = HashMap::new();
     let mut edge_tid_dct = HashMap::new();
-    for i in 0..n {
+
+    for (i, tile) in tiles.iter().enumerate() {
         for p in CW {
-            for d in [tiles[i].calc_edge_code(p), tiles[i].calc_edge_code_rev(p)] {
+            for d in [tile.calc_edge_code(p), tile.calc_edge_code_rev(p)] {
                 (*edge_tid_dct.entry(d).or_insert(vec![])).push(i);
                 *count.entry(d).or_insert(0) += 1;
             }
         }
     }
 
+    // for i in 0..n {
+    //     for p in CW {
+    //         for d in [tiles[i].calc_edge_code(p), tiles[i].calc_edge_code_rev(p)] {
+    //             (*edge_tid_dct.entry(d).or_insert(vec![])).push(i);
+    //             *count.entry(d).or_insert(0) += 1;
+    //         }
+    //     }
+    // }
+
     // find left-top one
     let mut lo = 0usize; // NOTE: not local
     let rotate_map = [[0, 3, 0, 0], [3, 0, 2, 0], [0, 2, 0, 1], [0, 0, 1, 0]];
     let mut rotate_ij = vec![];
-    for i in 0..n {
+
+    for (i, tile) in tiles.iter().enumerate() {
         rotate_ij.clear();
         for (j, p) in CW.into_iter().enumerate() {
-            if *count.get(&tiles[i].calc_edge_code(p)).unwrap() == 1
+            if *count.get(&tile.calc_edge_code(p)).unwrap() == 1
             // && *count.get(&tiles[i].calc_edge_code_rev(p)).unwrap() == 1
             {
                 rotate_ij.push(j);
@@ -164,11 +175,26 @@ pub fn part2() -> usize {
             break;
         }
     }
+
+    // for i in 0..n {
+    //     rotate_ij.clear();
+    //     for (j, p) in CW.into_iter().enumerate() {
+    //         if *count.get(&tiles[i].calc_edge_code(p)).unwrap() == 1
+    //         // && *count.get(&tiles[i].calc_edge_code_rev(p)).unwrap() == 1
+    //         {
+    //             rotate_ij.push(j);
+    //         }
+    //     }
+    //     if rotate_ij.len() == 2 {
+    //         lo = i;
+    //         break;
+    //     }
+    // }
     let mut used = vec![false; n];
     used[lo] = true;
     tiles[lo].rotate(rotate_map[rotate_ij[0]][rotate_ij[1]]);
 
-    let mut pre = Tile::new();
+    // let mut pre = Tile::new();
 
     // find layout
     let mut layout = [[999; M]; M];
@@ -180,7 +206,7 @@ pub fn part2() -> usize {
             let pre = &tiles[layout[i - 1][0]].clone();
             for &idx in edge_tid_dct.get(&pre.calc_edge_code(Pos::Down)).unwrap() {
                 if !used[idx] {
-                    tiles.get_mut(idx).unwrap().attach_up(&pre);
+                    tiles.get_mut(idx).unwrap().attach_up(pre);
                     layout[i][0] = idx;
                     used[idx] = true;
                     break;
@@ -193,7 +219,7 @@ pub fn part2() -> usize {
             let pre = &tiles[layout[i][j - 1]].clone();
             for &idx in edge_tid_dct.get(&pre.calc_edge_code(Pos::Right)).unwrap() {
                 if !used[idx] {
-                    tiles.get_mut(idx).unwrap().attach_left(&pre);
+                    tiles.get_mut(idx).unwrap().attach_left(pre);
                     layout[i][j] = idx;
                     used[idx] = true;
                     if i > 0 {
@@ -231,24 +257,33 @@ struct Tile {
 }
 
 impl Tile {
-    fn new() -> Self {
-        Self {
-            data: [[false; N]; N],
-            id: 0,
-        }
-    }
+    // fn new() -> Self {
+    //     Self {
+    //         data: [[false; N]; N],
+    //         id: 0,
+    //     }
+    // }
 
-    fn from_iter(lines: &Vec<&String>, id: usize) -> Self {
+    fn from_iter<'a>(lines: impl Iterator<Item = &'a String>, id: usize) -> Self {
         let mut data = [[false; N]; N];
-        let nc = lines[0].len();
-        for i in 0..lines.len() {
-            let bts = lines[i].as_bytes();
-            for j in 0..nc {
-                if bts[j] == b'#' {
+        // let nc = lines[0].len();
+        for (i, line) in lines.enumerate() {
+            //.iter()
+            for (j, &c) in line.as_bytes().iter().enumerate() {
+                if c == b'#' {
                     data[i][j] = true;
                 }
             }
         }
+
+        // for i in 0..lines.len() {
+        //     let bts = lines[i].as_bytes();
+        //     for j in 0..nc {
+        //         if bts[j] == b'#' {
+        //             data[i][j] = true;
+        //         }
+        //     }
+        // }
         Self { data, id }
     }
 
@@ -261,25 +296,40 @@ impl Tile {
         let mut new = [[false; N]; N];
         match i {
             1 => {
-                for i in 0..N {
-                    for j in 0..N {
-                        new[j][N - i - 1] = self.data[i][j];
+                for (i, row) in new.iter_mut().enumerate() {
+                    for (j, item) in row.iter_mut().enumerate() {
+                        *item = self.data[N - 1 - j][i];
                     }
                 }
+                // for i in 0..N {
+                //     for j in 0..N {
+                //         new[j][N - i - 1] = self.data[i][j];
+                //     }
+                // }
             }
             2 => {
-                for i in 0..N {
-                    for j in 0..N {
-                        new[N - i - 1][N - j - 1] = self.data[i][j];
+                for (i, row) in new.iter_mut().enumerate() {
+                    for (j, item) in row.iter_mut().enumerate() {
+                        *item = self.data[N - 1 - i][N - 1 - j];
                     }
                 }
+                // for i in 0..N {
+                //     for j in 0..N {
+                //         new[N - i - 1][N - j - 1] = self.data[i][j];
+                //     }
+                // }
             }
             _ => {
-                for i in 0..N {
-                    for j in 0..N {
-                        new[N - j - 1][i] = self.data[i][j];
+                for (i, row) in new.iter_mut().enumerate() {
+                    for (j, item) in row.iter_mut().enumerate() {
+                        *item = self.data[j][N - 1 - i];
                     }
                 }
+                // for i in 0..N {
+                //     for j in 0..N {
+                //         new[N - j - 1][i] = self.data[i][j];
+                //     }
+                // }
             }
         }
         self.data = new;
@@ -289,11 +339,17 @@ impl Tile {
         // left <-> right is enough
         if flip_or_not {
             let mut new = [[false; N]; N];
-            for i in 0..N {
-                for j in 0..N {
-                    new[i][N - j - 1] = self.data[i][j];
+            for (i, row) in new.iter_mut().enumerate() {
+                for (j, item) in row.iter_mut().enumerate() {
+                    *item = self.data[i][N - 1 - j];
                 }
             }
+
+            // for i in 0..N {
+            //     for j in 0..N {
+            //         new[i][N - j - 1] = self.data[i][j];
+            //     }
+            // }
             self.data = new;
         }
     }
@@ -312,12 +368,12 @@ impl Tile {
         ret
     }
 
-    fn edge_iter(p: Pos) -> f1_2 {
+    fn edge_iter(p: Pos) -> F1_2 {
         match p {
-            Pos::Up => (|x| (0, x)) as f1_2,
-            Pos::Right => (|x| (x, N - 1)) as f1_2,
-            Pos::Down => (|x| (N - 1, x)) as f1_2,
-            Pos::Left => (|x| (x, 0)) as f1_2,
+            Pos::Up => (|x| (0, x)) as F1_2,
+            Pos::Right => (|x| (x, N - 1)) as F1_2,
+            Pos::Down => (|x| (N - 1, x)) as F1_2,
+            Pos::Left => (|x| (x, 0)) as F1_2,
         }
     }
 
@@ -377,10 +433,10 @@ struct Image {
 }
 
 impl Image {
-    fn from_layout(tiles: &Vec<Tile>, layout: &[[usize; M]; M]) -> Self {
+    fn from_layout(tiles: &[Tile], layout: &[[usize; M]; M]) -> Self {
         let mut data = [[false; MN]; MN];
         let mut i0 = 0;
-        let mut j0 = 0;
+        let mut j0; // = 0;
         for i in 0..M {
             j0 = 0;
             for j in 0..M {
@@ -406,23 +462,23 @@ impl Image {
         let mut new = [[false; MN]; MN];
         match i {
             1 => {
-                for i in 0..MN {
-                    for j in 0..MN {
-                        new[j][MN - i - 1] = self.data[i][j];
+                for (i, row) in new.iter_mut().enumerate() {
+                    for (j, item) in row.iter_mut().enumerate() {
+                        *item = self.data[MN - 1 - j][i];
                     }
                 }
             }
             2 => {
-                for i in 0..MN {
-                    for j in 0..MN {
-                        new[MN - i - 1][MN - j - 1] = self.data[i][j];
+                for (i, row) in new.iter_mut().enumerate() {
+                    for (j, item) in row.iter_mut().enumerate() {
+                        *item = self.data[MN - 1 - i][MN - 1 - j];
                     }
                 }
             }
             3 => {
-                for i in 0..MN {
-                    for j in 0..MN {
-                        new[MN - j - 1][i] = self.data[i][j];
+                for (i, row) in new.iter_mut().enumerate() {
+                    for (j, item) in row.iter_mut().enumerate() {
+                        *item = self.data[j][MN - 1 - i];
                     }
                 }
             }
@@ -434,11 +490,16 @@ impl Image {
     fn flip(&mut self, flip_or_not: bool) {
         if flip_or_not {
             let mut new = [[false; MN]; MN];
-            for i in 0..MN {
-                for j in 0..MN {
-                    new[i][MN - j - 1] = self.data[i][j];
+            for (i, row) in new.iter_mut().enumerate() {
+                for (j, item) in row.iter_mut().enumerate() {
+                    *item = self.data[i][MN - 1 - j];
                 }
             }
+            // for i in 0..MN {
+            //     for j in 0..MN {
+            //         new[i][MN - j - 1] = self.data[i][j];
+            //     }
+            // }
             self.data = new;
         }
     }
@@ -490,14 +551,14 @@ impl Image {
 
 impl fmt::Display for Tile {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Tile {}:\n", self.id)?;
+        writeln!(f, "Tile {}:", self.id)?;
         for i in 0..N {
             for j in 0..N {
                 write!(f, "{}", if self.data[i][j] { "#" } else { "." })?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
-        write!(f, "\n")
+        writeln!(f)
     }
 }
 
@@ -507,26 +568,27 @@ impl fmt::Display for Image {
             for j in 0..MN {
                 write!(f, "{}", if self.data[i][j] { "#" } else { "." })?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
-        write!(f, "\n")
+        writeln!(f)
     }
 }
 
-fn get_tiles(lines: &Vec<String>) -> Vec<Tile> {
+fn get_tiles(lines: &[String]) -> Vec<Tile> {
     let re_num = Regex::new(r"(\d+)").unwrap();
-    let mut iter = lines.into_iter();
+    let mut iter = lines.iter();
     let mut ret = vec![];
-    for i in 0..M * M {
+    for _ in 0..M * M {
         let tid = re_num
-            .captures(&iter.next().unwrap())
+            .captures(iter.next().unwrap())
             .unwrap()
             .get(1)
             .unwrap()
             .as_str()
             .parse()
             .unwrap();
-        ret.push(Tile::from_iter(&iter.by_ref().take(N).collect(), tid));
+        //ret.push(Tile::from_iter(&iter.by_ref().take(N).collect(), tid));
+        ret.push(Tile::from_iter(iter.by_ref().take(N), tid));
         iter.next();
     }
     ret
@@ -543,3 +605,9 @@ fn get_tiles(lines: &Vec<String>) -> Vec<Tile> {
 // } else {
 //     self.calc_edge_code_rev(p)
 // } == to_attach
+
+#[test]
+fn test_20() {
+    assert_eq!(60145080587029, part1());
+    assert_eq!(1901, part2());
+}

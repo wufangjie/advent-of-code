@@ -6,8 +6,8 @@ const DPK: usize = 19316454;
 // const DPK: usize = 17807724;
 
 pub fn part1() {
-    let mut cls = find_loop_size(CPK); // card loop size
-    let mut dls = find_loop_size(DPK); // card loop size
+    let cls = find_loop_size(CPK); // card loop size
+    let dls = find_loop_size(DPK); // card loop size
     dbg!(cls, dls);
 
     dbg!(calc_encryption_key(CPK, dls));
@@ -35,4 +35,10 @@ fn calc_encryption_key(public_key: usize, loop_size: usize) -> usize {
         encryption_key %= P;
     }
     encryption_key
+}
+
+#[test]
+fn test_25() {
+    part1();
+    //assert_eq!(545789, part1());
 }

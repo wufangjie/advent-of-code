@@ -46,13 +46,13 @@ impl BitN {
         BitN { data, mask }
     }
 
-    fn write(&mut self, mut n: u64) -> u64 {
+    fn write(&mut self, n: u64) -> u64 {
         let mut ret = 0;
         for i in 0..N {
             if self.mask[i] {
-                ret |= n & (1 << N - i - 1);
+                ret |= n & (1 << (N - i - 1));
             } else if self.data[i] > 0 {
-                ret |= 1 << N - i - 1;
+                ret |= 1 << (N - i - 1);
             }
         }
         ret
@@ -108,7 +108,7 @@ impl BitN2 {
                 mask[i] = true;
                 poss = poss
                     .into_iter()
-                    .flat_map(|x| [x, x | (1 << N - i - 1)].into_iter())
+                    .flat_map(|x| [x, x | (1 << (N - i - 1))].into_iter())
                     .collect();
             } else if c == b'1' {
                 data[i] = 1;
@@ -117,11 +117,11 @@ impl BitN2 {
         BitN2 { data, mask, poss }
     }
 
-    fn write(&mut self, mut n: u64) -> Vec<u64> {
+    fn write(&mut self, n: u64) -> Vec<u64> {
         let mut ret = 0u64;
         for i in 0..N {
             if !self.mask[i] {
-                let cur = 1 << N - i - 1;
+                let cur = 1 << (N - i - 1);
                 if self.data[i] > 0 || n & cur > 0 {
                     ret |= cur;
                 }
@@ -137,4 +137,10 @@ fn test_14_2() {
     dbg!(&bt.poss);
     dbg!(&bt.data);
     dbg!(&bt.write(42));
+}
+
+#[test]
+fn test_14() {
+    assert_eq!(10717676595607, part1());
+    assert_eq!(3974538275659, part2());
 }

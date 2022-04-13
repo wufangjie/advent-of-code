@@ -8,13 +8,13 @@ pub fn part1() -> usize {
     let mut count_valid = 0;
     for line in lines {
         let caps = re.captures(&line).unwrap();
-        let c = caps.get(3).unwrap().as_str().bytes().next().unwrap();
+        let c = caps.get(3).unwrap().as_str().parse::<char>().unwrap() as u8;
         let count = caps
             .get(4)
             .unwrap()
             .as_str()
-            .as_bytes()
-            .into_iter()
+            .as_bytes() //.chars()
+            .iter()
             .filter(|&&x| x == c)
             .count();
         if count >= caps.get(1).unwrap().as_str().parse().unwrap()
@@ -33,15 +33,21 @@ pub fn part2() -> usize {
     let mut count_valid = 0;
     for line in lines {
         let caps = re.captures(&line).unwrap();
-        let c = caps.get(3).unwrap().as_str().bytes().next().unwrap();
+        let c = caps.get(3).unwrap().as_str().parse::<char>().unwrap() as u8;
         let s = caps.get(4).unwrap().as_str();
         let lo = caps.get(1).unwrap().as_str().parse::<usize>().unwrap() - 1;
         let hi = caps.get(2).unwrap().as_str().parse::<usize>().unwrap() - 1;
-        let c1 = s.bytes().nth(lo).unwrap();
-        let c2 = s.bytes().nth(hi).unwrap();
+        let c1 = s.as_bytes()[lo];
+        let c2 = s.as_bytes()[hi];
         if c1 != c2 && (c1 == c || c2 == c) {
             count_valid += 1;
         }
     }
     count_valid
+}
+
+#[test]
+fn test_day02() {
+    assert_eq!(493, part1());
+    assert_eq!(593, part2());
 }

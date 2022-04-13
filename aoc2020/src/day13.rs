@@ -37,3 +37,9 @@ pub fn part2() -> usize {
     }
     b
 }
+
+#[test]
+fn test_13() {
+    assert_eq!(3464, part1());
+    assert_eq!(760171380521445, part2());
+}

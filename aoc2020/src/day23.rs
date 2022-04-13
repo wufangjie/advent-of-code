@@ -156,14 +156,22 @@ impl Cup {
         unsafe { (*self.next).label - 1 }
     }
 
+    /// just for debug
+    #[allow(dead_code)]
     fn print_next_n(&self, n: usize) {
         let mut p = self;
         unsafe {
-            for i in 0..n {
+            for _ in 0..n {
                 print!("{} -> ", p.label);
                 p = &*p.next;
             }
         }
-        println!("");
+        println!();
     }
+}
+
+#[test]
+fn test_23() {
+    assert_eq!(53248976, part1());
+    assert_eq!(418819514477, part2());
 }

@@ -68,3 +68,9 @@ pub fn part2() -> i32 {
     }
     count
 }
+
+#[test]
+fn test_07() {
+    assert_eq!(151, part1());
+    assert_eq!(41559, part2());
+}

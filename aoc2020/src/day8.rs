@@ -1,4 +1,5 @@
 use crate::read_lines;
+use std::cmp::Ordering;
 
 const NOP: u8 = 0;
 const JMP: u8 = 1;
@@ -24,7 +25,7 @@ fn get_lines() -> Vec<(u8, i32)> {
 }
 
 pub fn part1() -> i32 {
-    let mut lines = get_lines();
+    let lines = get_lines();
     let nrow = lines.len();
     let mut flag = vec![false; nrow];
     let mut acc = 0;
@@ -101,22 +102,27 @@ pub fn part2() -> i32 {
     }
 }
 
-fn can_succeed(lines: &Vec<(u8, i32)>, mut i: usize, mut acc: i32) -> (bool, i32) {
+fn can_succeed(lines: &[(u8, i32)], mut i: usize, mut acc: i32) -> (bool, i32) {
     let nrow = lines.len();
     for _ in 0..nrow {
-        if i == nrow {
-            return (true, acc);
-        } else if i < 0 || i > nrow {
-            return (false, acc);
-        }
-        match lines[i].0 {
-            JMP => i = (i as i32 + lines[i].1) as usize,
-            ACC => {
-                acc += lines[i].1;
-                i += 1;
-            }
-            _ => i += 1,
+        match i.cmp(&nrow) {
+            Ordering::Equal => return (true, acc),
+            Ordering::Greater => return (false, acc),
+            Ordering::Less => match lines[i].0 {
+                JMP => i = (i as i32 + lines[i].1) as usize,
+                ACC => {
+                    acc += lines[i].1;
+                    i += 1;
+                }
+                _ => i += 1,
+            },
         }
     }
     (false, acc)
+}
+
+#[test]
+fn test_08() {
+    assert_eq!(1179, part1());
+    assert_eq!(1089, part2());
 }

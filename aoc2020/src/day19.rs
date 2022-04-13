@@ -3,7 +3,7 @@ use regex::Regex;
 use std::collections::{HashMap, HashSet};
 
 pub fn part1() -> usize {
-    let (mut rules, tests) = get_rules_and_tests();
+    let (rules, tests) = get_rules_and_tests();
     let size_hints = calc_size_hints(&rules);
 
     let re_chr: Regex = Regex::new(r"^[a-z]$").unwrap();
@@ -15,7 +15,7 @@ pub fn part1() -> usize {
         .sum()
 }
 
-fn calc_size_hints(rules: &Vec<Vec<String>>) -> Vec<HashSet<usize>> {
+fn calc_size_hints(rules: &[Vec<String>]) -> Vec<HashSet<usize>> {
     let re_chr: Regex = Regex::new("^[a-z]$").unwrap();
     let n = rules.len();
     let mut size_hints = vec![HashSet::new(); n];
@@ -26,7 +26,7 @@ fn calc_size_hints(rules: &Vec<Vec<String>>) -> Vec<HashSet<usize>> {
         let mut unknown = HashSet::new();
         let mut known = true;
         for seq in &rules[i] {
-            if re_chr.is_match(&seq) {
+            if re_chr.is_match(seq) {
                 size_hints[i].insert(1);
             } else {
                 known = false;
@@ -45,7 +45,7 @@ fn calc_size_hints(rules: &Vec<Vec<String>>) -> Vec<HashSet<usize>> {
 
     while let Some(i) = known_stack.pop() {
         for seq in &rules[i] {
-            if !re_chr.is_match(&seq) {
+            if !re_chr.is_match(seq) {
                 let mut sz_set = HashSet::new();
                 sz_set.insert(0usize);
                 for d in seq.split(' ') {
@@ -64,7 +64,7 @@ fn calc_size_hints(rules: &Vec<Vec<String>>) -> Vec<HashSet<usize>> {
         }
         for &p in &find_parent[i] {
             left_unknown[p].remove(&i);
-            if left_unknown[p].len() == 0 {
+            if left_unknown[p].is_empty() {
                 known_stack.push(p);
             }
         }
@@ -99,9 +99,9 @@ impl<'a> Checker<'a> {
     fn is_valid(&mut self, s: &'a str, r: String) -> bool {
         if self.re_chr.is_match(&r) {
             s == r
-        } else if s.len() == 0 {
-            r.len() == 0
-        } else if r.len() == 0 {
+        } else if s.is_empty() {
+            r.is_empty()
+        } else if r.is_empty() {
             false
         } else if let Some(res) = self.cache.get(&(s, r.clone())) {
             *res
@@ -117,7 +117,7 @@ impl<'a> Checker<'a> {
             let i: usize = r.parse().unwrap();
             let nseq = self.rules[i].len();
             for iseq in 0..nseq {
-                if self.is_valid(&s, self.rules[i][iseq].clone()) {
+                if self.is_valid(s, self.rules[i][iseq].clone()) {
                     return true;
                 }
             }
@@ -132,7 +132,7 @@ impl<'a> Checker<'a> {
             let first: usize = (&r[..i]).parse().unwrap();
             let lst: Vec<usize> = self.size_hints[first]
                 .iter()
-                .map(|&x| x)
+                .cloned()
                 .filter(|&x| x < s.len())
                 .collect();
             for sz in lst {
@@ -151,7 +151,7 @@ fn get_rules_and_tests() -> (Vec<Vec<String>>, Vec<String>) {
     let mut lines = read_lines("./data/day19.txt").into_iter();
     let mut rules_rows = vec![];
     for line in lines.by_ref() {
-        if line == "" {
+        if line.is_empty() {
             break;
         }
         rules_rows.push(line);
@@ -160,10 +160,10 @@ fn get_rules_and_tests() -> (Vec<Vec<String>>, Vec<String>) {
     let mut rules = vec![vec![]; rules_rows.len()];
     let re_sep: Regex = Regex::new(r"[:|]").unwrap();
     for s in rules_rows {
-        let mut iter = re_sep.split(&s).into_iter();
+        let mut iter = re_sep.split(&s);
         let i: usize = iter.next().unwrap().parse().unwrap();
         for ds in iter {
-            rules[i].push(ds.trim().replace("\"", ""));
+            rules[i].push(ds.trim().replace('"', ""));
         }
     }
     (rules, lines.collect())
@@ -187,4 +187,10 @@ pub fn part2() -> usize {
         .iter()
         .map(|x| ck.is_valid(x, "0".to_owned()) as usize)
         .sum()
+}
+
+#[test]
+fn test_19() {
+    assert_eq!(299, part1());
+    assert_eq!(414, part2());
 }

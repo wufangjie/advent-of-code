@@ -3,7 +3,7 @@ use crate::read_lines;
 pub fn part1() -> i32 {
     let lines = read_lines("./data/day1.txt");
     let mut lines: Vec<i32> = lines.into_iter().map(|x| x.parse().unwrap()).collect();
-    lines.sort();
+    lines.sort_unstable();
 
     let mut lo = 0;
     let mut hi = lines.len() - 1;
@@ -20,7 +20,7 @@ pub fn part1() -> i32 {
 pub fn part2() -> i32 {
     let lines = read_lines("./data/day1.txt");
     let mut lines: Vec<i32> = lines.into_iter().map(|x| x.parse().unwrap()).collect();
-    lines.sort();
+    lines.sort_unstable();
 
     let mut lo2 = 0;
     let mut hi2 = lines.len() - 1;
@@ -42,4 +42,10 @@ pub fn part2() -> i32 {
         lo2 += 1;
     }
     -1
+}
+
+#[test]
+fn test_day01() {
+    assert_eq!(326211, part1());
+    assert_eq!(131347190, part2());
 }

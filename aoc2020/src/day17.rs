@@ -1,4 +1,5 @@
 use crate::read_lines;
+use std::fmt;
 
 const NC: usize = 6;
 
@@ -21,14 +22,20 @@ impl Cube {
         }
     }
 
-    pub fn init(&mut self, lines: &Vec<String>) {
-        let n = lines.len();
-        for j in 0..n {
-            let line = lines[j].as_bytes();
-            for i in 0..n {
-                self.data[1][j + 2][i + 2] = if line[i] == b'#' { 1 } else { 0 };
+    pub fn init(&mut self, lines: &[String]) {
+        for (j, line) in lines.iter().enumerate() {
+            let line = line.as_bytes();
+            for (i, &c) in line.iter().enumerate() {
+                self.data[1][j + 2][i + 2] = if c == b'#' { 1 } else { 0 };
             }
         }
+        // let n = lines.len();
+        // for j in 0..n {
+        //     let line = lines[j].as_bytes();
+        //     for i in 0..n {
+        //         self.data[1][j + 2][i + 2] = if line[i] == b'#' { 1 } else { 0 };
+        //     }
+        // }
     }
 
     pub fn next_cycle(&self) -> Self {
@@ -41,26 +48,13 @@ impl Cube {
         for z in new.gen_range('z') {
             for y in new.gen_range('y') {
                 for x in new.gen_range('x') {
-                    new.update(x, y, z, &self);
+                    new.update(x, y, z, self);
                 }
             }
         }
         new.update_delta();
         new.update_z0();
         new
-    }
-
-    pub fn display(&self) {
-        for k in self.gen_range('z') {
-            for j in self.gen_range('y') {
-                for i in self.gen_range('x') {
-                    print!("{}", if self.data[k][j][i] == 1 { '#' } else { '.' });
-                }
-                println!("");
-            }
-            println!("");
-        }
-        println!("");
     }
 
     pub fn count_active(&self) -> usize {
@@ -100,10 +94,8 @@ impl Cube {
             if acc == 3 || acc == 4 {
                 self.data[z][y][x] = 1;
             }
-        } else {
-            if acc == 3 {
-                self.data[z][y][x] = 1;
-            }
+        } else if acc == 3 {
+            self.data[z][y][x] = 1;
         }
     }
 
@@ -168,15 +160,31 @@ impl Cube {
     }
 }
 
+impl fmt::Display for Cube {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for k in self.gen_range('z') {
+            for j in self.gen_range('y') {
+                for i in self.gen_range('x') {
+                    write!(f, "{}", if self.data[k][j][i] == 1 { '#' } else { '.' })?;
+                }
+                writeln!(f)?;
+            }
+            writeln!(f)?;
+        }
+        writeln!(f)
+    }
+}
+
 pub fn part1() -> usize {
     let lines = read_lines("./data/day17.txt");
     let mut cube = Cube::new(true, lines[0].len(), lines.len(), 1);
     cube.init(&lines);
 
-    for _ in 0..6 {
+    for _ in 0..NC {
         cube = cube.next_cycle();
     }
-    cube.display();
+
+    // println!("{}", &cube);
     cube.count_active()
 }
 
@@ -197,14 +205,20 @@ impl Dim4 {
         }
     }
 
-    pub fn init(&mut self, lines: &Vec<String>) {
-        let n = lines.len();
-        for j in 0..n {
-            let line = lines[j].as_bytes();
-            for i in 0..n {
-                self.data[2][2][j + 2][i + 2] = if line[i] == b'#' { 1 } else { 0 };
+    pub fn init(&mut self, lines: &[String]) {
+        for (j, line) in lines.iter().map(|line| line.as_bytes()).enumerate() {
+            //let line = line.as_bytes();
+            for (i, &c) in line.iter().enumerate() {
+                self.data[2][2][j + 2][i + 2] = if c == b'#' { 1 } else { 0 };
             }
         }
+        // let n = lines.len();
+        // for j in 0..n {
+        //     let line = lines[j].as_bytes();
+        //     for i in 0..n {
+        //         self.data[2][2][j + 2][i + 2] = if line[i] == b'#' { 1 } else { 0 };
+        //     }
+        // }
     }
 
     pub fn next_cycle(&self) -> Self {
@@ -218,7 +232,7 @@ impl Dim4 {
             for z in new.gen_range('z') {
                 for y in new.gen_range('y') {
                     for x in new.gen_range('x') {
-                        new.update(x, y, z, w, &self);
+                        new.update(x, y, z, w, self);
                     }
                 }
             }
@@ -266,10 +280,8 @@ impl Dim4 {
             if acc == 3 || acc == 4 {
                 self.data[w][z][y][x] = 1;
             }
-        } else {
-            if acc == 3 {
-                self.data[w][z][y][x] = 1;
-            }
+        } else if acc == 3 {
+            self.data[w][z][y][x] = 1;
         }
     }
 
@@ -335,8 +347,14 @@ pub fn part2() -> usize {
     let mut dim4 = Dim4::new(lines[0].len(), lines.len(), 1, 1);
     dim4.init(&lines);
 
-    for _ in 0..6 {
+    for _ in 0..NC {
         dim4 = dim4.next_cycle();
     }
     dim4.count_active()
+}
+
+#[test]
+fn test_17() {
+    assert_eq!(304, part1());
+    assert_eq!(1868, part2());
 }

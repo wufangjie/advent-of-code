@@ -1,4 +1,4 @@
-use crate::read_lines;
+//use crate::read_lines;
 use std::collections::HashMap;
 
 pub fn part1() -> usize {
@@ -6,11 +6,17 @@ pub fn part1() -> usize {
 }
 
 fn calc_nth_start_by(n: usize, start_lst: Vec<usize>) -> usize {
-    let mut spoken = HashMap::new();
+    // let mut spoken: HashMap<usize, usize> =
+    //     start_lst.iter().enumerate().map(|(x, &y)| (y, x)).collect();
     let m = start_lst.len();
-    for i in 0..m {
-        spoken.insert(start_lst[i], i);
-    }
+    let mut spoken: HashMap<usize, usize> = start_lst.into_iter().zip(0..m).collect();
+
+    // let mut spoken = HashMap::new();
+    // let m = start_lst.len();
+    // for i in 0..m {
+    //     spoken.insert(start_lst[i], i);
+    // }
+
     let mut nxt = 0;
     for i in m..n - 1 {
         let pre = spoken.insert(nxt, i);
@@ -33,4 +39,10 @@ fn test_15_1() {
 pub fn part2() -> usize {
     // release mode: <2 sec
     calc_nth_start_by(30000000, vec![1, 2, 16, 19, 18, 0])
+}
+
+#[test]
+fn test_15() {
+    assert_eq!(536, part1());
+    assert_eq!(24065124, part2());
 }

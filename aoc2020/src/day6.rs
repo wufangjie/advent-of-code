@@ -6,7 +6,7 @@ pub fn part1() -> usize {
     let mut questions = HashSet::new();
     let mut count = 0;
     for line in lines {
-        if line == "" {
+        if line.is_empty() {
             count += questions.len();
             questions.clear();
         } else {
@@ -25,7 +25,7 @@ pub fn part2() -> usize {
     let mut state = 0; // { 0: first line, 1: normal, 2: can skip }
     let mut count = 0;
     for line in lines {
-        if line == "" {
+        if line.is_empty() {
             count += questions.len();
             questions.clear();
             state = 0;
@@ -43,7 +43,7 @@ pub fn part2() -> usize {
                             questions_inter.insert(c);
                         }
                     }
-                    if questions_inter.len() == 0 {
+                    if questions_inter.is_empty() {
                         state = 2;
                     }
                     questions = questions_inter;
@@ -54,4 +54,10 @@ pub fn part2() -> usize {
         }
     }
     count + questions.len()
+}
+
+#[test]
+fn test_06() {
+    assert_eq!(7128, part1());
+    assert_eq!(3640, part2());
 }

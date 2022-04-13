@@ -16,14 +16,14 @@ pub fn part1() -> usize {
     let mut p1 = Player::new(
         iter.by_ref()
             .skip(1)
-            .take_while(|s| s != "")
+            .take_while(|s| !s.is_empty())
             .map(|x| x.parse().unwrap())
             .collect(),
     );
     let mut p2 = Player::new(
         iter.by_ref()
             .skip(1)
-            .take_while(|s| s != "")
+            .take_while(|s| !s.is_empty())
             .map(|x| x.parse().unwrap())
             .collect(),
     );
@@ -90,14 +90,14 @@ pub fn part2() -> usize {
     let mut p1 = Player::new(
         iter.by_ref()
             .skip(1)
-            .take_while(|s| s != "")
+            .take_while(|s| !s.is_empty())
             .map(|x| x.parse().unwrap())
             .collect(),
     );
     let mut p2 = Player::new(
         iter.by_ref()
             .skip(1)
-            .take_while(|s| s != "")
+            .take_while(|s| !s.is_empty())
             .map(|x| x.parse().unwrap())
             .collect(),
     );
@@ -130,23 +130,27 @@ fn dfs(p1: &mut Player, p2: &mut Player) -> State {
                 State::P1Win => p1.win_two_card(c1, c2),
                 State::P2Win => p2.win_two_card(c2, c1),
             }
+        } else if c1 < c2 {
+            p2.win_two_card(c2, c1);
+            if p1.len() == 0 {
+                return State::P2Win;
+            }
         } else {
-            if c1 < c2 {
-                p2.win_two_card(c2, c1);
-                if p1.len() == 0 {
-                    return State::P2Win;
-                }
-            } else {
-                p1.win_two_card(c1, c2);
-                if p2.len() == 0 {
-                    return State::P1Win;
-                }
+            p1.win_two_card(c1, c2);
+            if p2.len() == 0 {
+                return State::P1Win;
             }
         }
-        if s1.contains(&p1) || s2.contains(&p2) {
+        if s1.contains(p1) || s2.contains(p2) {
             return State::P1Win;
         }
         s1.insert(p1.clone());
         s2.insert(p2.clone());
     }
+}
+
+#[test]
+fn test_22() {
+    assert_eq!(32495, part1());
+    assert_eq!(32665, part2());
 }

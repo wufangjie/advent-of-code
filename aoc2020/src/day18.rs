@@ -2,7 +2,7 @@ use crate::read_lines;
 
 pub fn part1() -> i64 {
     let lines = read_lines("./data/day18.txt");
-    lines.into_iter().map(|line| calc_expr_greedy(line)).sum()
+    lines.into_iter().map(calc_expr_greedy).sum()
 }
 
 fn calc_expr_greedy(line: String) -> i64 {
@@ -14,7 +14,7 @@ fn calc_expr_greedy(line: String) -> i64 {
             '(' => stack_op.push('('),
             '0'..='9' => s.push(c),
             _ => {
-                if s != "" {
+                if !s.is_empty() {
                     push_num_lazy(&mut stack_num, &mut stack_op, s.parse().unwrap());
                     s = String::new();
                 }
@@ -30,7 +30,7 @@ fn calc_expr_greedy(line: String) -> i64 {
             }
         }
     }
-    if s != "" {
+    if !s.is_empty() {
         push_num_lazy(&mut stack_num, &mut stack_op, s.parse().unwrap());
     }
     stack_num[0]
@@ -72,10 +72,7 @@ fn test_18_1() {
 
 pub fn part2() -> i64 {
     let lines = read_lines("./data/day18.txt");
-    lines
-        .into_iter()
-        .map(|line| calc_expr_different(line))
-        .sum()
+    lines.into_iter().map(calc_expr_different).sum()
 }
 
 #[inline]
@@ -97,7 +94,7 @@ fn calc_expr_different(line: String) -> i64 {
             '(' => stack_op.push('('),
             '0'..='9' => s.push(c),
             _ => {
-                if s != "" {
+                if !s.is_empty() {
                     stack_num.push(s.parse().unwrap());
                     s = String::new();
                 }
@@ -159,4 +156,10 @@ fn test_18_2() {
         23340,
         calc_expr_different("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2".to_owned())
     );
+}
+
+#[test]
+fn test_18() {
+    assert_eq!(4491283311856, part1());
+    assert_eq!(68852578641904, part2());
 }

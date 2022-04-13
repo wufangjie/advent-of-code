@@ -5,14 +5,14 @@ pub fn part1() -> usize {
     count_tree(&lines, 3, 1)
 }
 
-fn count_tree(lines: &Vec<String>, dx: usize, dy: usize) -> usize {
+fn count_tree(lines: &[String], dx: usize, dy: usize) -> usize {
     let nrow = lines.len();
     let ncol = lines[0].len();
     let mut count = 0;
     let mut i = 0;
     let mut j = 0;
     while i < nrow {
-        if lines[i].bytes().nth(j).unwrap() == b'#' {
+        if lines[i].as_bytes()[j] == b'#' {
             count += 1;
         }
         j += dx;
@@ -28,4 +28,10 @@ pub fn part2() -> usize {
         .into_iter()
         .map(|(dx, dy)| count_tree(&lines, dx, dy))
         .product::<usize>()
+}
+
+#[test]
+fn test_day03() {
+    assert_eq!(220, part1());
+    assert_eq!(2138320800, part2());
 }

@@ -100,3 +100,9 @@ pub fn part2() -> usize {
     }
     black.len()
 }
+
+#[test]
+fn test_24() {
+    assert_eq!(326, part1());
+    assert_eq!(3979, part2());
+}

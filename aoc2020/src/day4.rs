@@ -11,7 +11,7 @@ pub fn part1() -> usize {
     let mut passport = HashMap::new();
     let mut count = 0usize;
     for line in lines {
-        if line == "" {
+        if line.is_empty() {
             count += (passport.len() == 7) as usize;
             passport.clear();
         } else {
@@ -49,7 +49,7 @@ pub fn part2() -> usize {
     let mut passport = HashMap::new();
     let mut count = 0usize;
     for line in lines {
-        if line == "" {
+        if line.is_empty() {
             count += is_valid(&passport, &reg_dct) as usize;
             passport.clear();
         } else {
@@ -69,7 +69,7 @@ fn is_valid(data: &HashMap<String, String>, reg_dct: &HashMap<&'static str, Rege
         false
     } else {
         for (k, v) in data {
-            if !reg_dct.get(&k as &str).unwrap().is_match(v) {
+            if !reg_dct.get(k as &str).unwrap().is_match(v) {
                 return false;
             }
         }
@@ -78,7 +78,7 @@ fn is_valid(data: &HashMap<String, String>, reg_dct: &HashMap<&'static str, Rege
 }
 
 #[test]
-fn test() {
+fn test_04() {
     let reg_dct: HashMap<&'static str, Regex> = [
         ("byr", r"^(19[2-9]\d|200[0-2])$"),
         ("iyr", r"^(201\d|2020)$"),
@@ -110,4 +110,7 @@ fn test() {
 
     assert!(f("pid", "000000001"));
     assert!(!f("pid", "0123456789"));
+
+    assert_eq!(208, part1());
+    assert_eq!(167, part2());
 }

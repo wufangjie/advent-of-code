@@ -1,5 +1,5 @@
 use crate::read_lines;
-use std::fmt;
+//use std::fmt;
 
 struct Direction {
     d: i32,
@@ -18,12 +18,8 @@ impl Direction {
         self.d += degree / 90;
     }
 
-    fn to_byte(&mut self) -> u8 {
-        self.d %= 4;
-        if self.d < 0 {
-            self.d += 4;
-        }
-        match self.d {
+    fn to_byte(&self) -> u8 {
+        match (self.d % 4 + 4) % 4 {
             0 => b'E',
             1 => b'S',
             2 => b'W',
@@ -59,7 +55,7 @@ pub fn part1() -> i32 {
             b'R' => d.turn_right(num),
             _ => unreachable!(),
         }
-        dbg!((x, y));
+        // dbg!((x, y));
     }
     x.abs() + y.abs()
 }
@@ -73,7 +69,7 @@ pub fn part2() -> i32 {
 
     for line in lines {
         let mut line = line.bytes();
-        let mut op = line.next().unwrap();
+        let op = line.next().unwrap();
         let num = line
             .map(|x| (x - b'0') as i32)
             .reduce(|a, b| 10 * a + b)
@@ -85,8 +81,8 @@ pub fn part2() -> i32 {
             b'W' => dx -= num,
             b'N' => dy += num,
             b'L' => {
-		// (dx, dy) = turn_left(dx, dy, num) is invalid (rust 2021)
-		// let (dx, dy) = turn_left(dx, dy, num) will drop before }
+                // (dx, dy) = turn_left(dx, dy, num) is invalid (rust 2021)
+                // let (dx, dy) = turn_left(dx, dy, num) will drop before }
                 let xy = turn_left(dx, dy, num);
                 dx = xy.0;
                 dy = xy.1;
@@ -102,7 +98,7 @@ pub fn part2() -> i32 {
             }
             _ => unreachable!(),
         }
-        dbg!((x, y));
+        // dbg!((x, y));
     }
     x.abs() + y.abs()
 }
@@ -120,4 +116,10 @@ fn turn_left(dx: i32, dy: i32, num: i32) -> (i32, i32) {
 #[inline]
 fn turn_right(dx: i32, dy: i32, num: i32) -> (i32, i32) {
     turn_left(dx, dy, 360 - num)
+}
+
+#[test]
+fn test_12() {
+    assert_eq!(2297, part1());
+    assert_eq!(89984, part2());
 }

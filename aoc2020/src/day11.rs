@@ -39,7 +39,7 @@ pub fn part1() -> usize {
                 }
             }
         }
-        changing = change.len() > 0;
+        changing = !change.is_empty();
     }
 
     layout
@@ -49,7 +49,7 @@ pub fn part1() -> usize {
 }
 
 #[inline]
-fn count_adj(layout: &Vec<Vec<i8>>, i: usize, j: usize) -> usize {
+fn count_adj(layout: &[Vec<i8>], i: usize, j: usize) -> usize {
     [
         (i - 1, j - 1),
         (i - 1, j),
@@ -104,8 +104,8 @@ pub fn part2() -> usize {
                 }
             }
         }
-        changing = change.len() > 0;
-        //pretty_print(&layout);
+        changing = !change.is_empty();
+        // pretty_print(&layout);
     }
 
     layout
@@ -114,7 +114,7 @@ pub fn part2() -> usize {
         .sum()
 }
 
-fn count_first_look(layout: &Vec<Vec<i8>>, i: usize, j: usize) -> usize {
+fn count_first_look(layout: &[Vec<i8>], i: usize, j: usize) -> usize {
     let nrow = layout.len() as i32;
     let ncol = layout[0].len() as i32;
 
@@ -151,21 +151,42 @@ fn count_first_look(layout: &Vec<Vec<i8>>, i: usize, j: usize) -> usize {
     acc
 }
 
-fn pretty_print(layout: &Vec<Vec<i8>>) {
-    let nrow = layout.len();
-    let ncol = layout[0].len();
-    for i in 0..nrow {
-        for j in 0..ncol {
+#[allow(dead_code)]
+fn pretty_print(layout: &[Vec<i8>]) {
+    //let nrow = layout.len();
+    //let ncol = layout[0].len();
+    for row in layout.iter() {
+        for item in row.iter() {
             print!(
                 "{}",
-                match layout[i][j] {
+                match *item {
                     1 => "#",
                     0 => "L",
                     _ => ".",
                 }
             );
         }
-        println!("");
+        println!();
     }
-    println!("");
+
+    // for i in 0..nrow {
+    //     for j in 0..ncol {
+    //         print!(
+    //             "{}",
+    //             match layout[i][j] {
+    //                 1 => "#",
+    //                 0 => "L",
+    //                 _ => ".",
+    //             }
+    //         );
+    //     }
+    //     println!();
+    // }
+    println!();
+}
+
+#[test]
+fn test_11() {
+    assert_eq!(2247, part1());
+    assert_eq!(2011, part2());
 }

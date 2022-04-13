@@ -68,7 +68,6 @@ fn update_messages(messages: &mut Vec<HashSet<String>>, lst: Vec<usize>, i0: usi
     messages[i0].extend(vec1);
 }
 
-
 pub fn part2() -> usize {
     let (mut rules, tests) = get_rules_and_tests();
     rules[8] = vec!["42".to_owned(), "42 8".to_owned()];

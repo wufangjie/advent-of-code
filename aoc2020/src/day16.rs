@@ -5,7 +5,7 @@ use std::collections::HashSet;
 pub fn part1() -> u32 {
     let s = read_string("./data/day16.txt").unwrap();
     let parts: Vec<&str> = s.split("\n\n").collect();
-    let bounds = merge_bound(&parts[0]);
+    let bounds = merge_bound(parts[0]);
 
     let mut res = 0;
     for line in parts[2].trim().split('\n').skip(1) {
@@ -27,7 +27,7 @@ fn merge_bound(part: &str) -> Vec<(u32, u32)> {
             caps.get(2).unwrap().as_str().parse::<u32>().unwrap(),
         ));
     }
-    pairs.sort();
+    pairs.sort_unstable();
     let mut bounds = vec![pairs[0]];
     let mut count = 0;
     for (lo, hi) in pairs.into_iter().skip(1) {
@@ -41,7 +41,7 @@ fn merge_bound(part: &str) -> Vec<(u32, u32)> {
     bounds
 }
 
-fn is_valid(bounds: &Vec<(u32, u32)>, v: u32) -> bool {
+fn is_valid(bounds: &[(u32, u32)], v: u32) -> bool {
     let mut lo = 0;
     let mut hi = bounds.len() - 1;
     while hi >= lo {
@@ -60,8 +60,8 @@ fn is_valid(bounds: &Vec<(u32, u32)>, v: u32) -> bool {
     false
 }
 
-fn get_valid_rows(parts: &Vec<&str>) -> Vec<Vec<u32>> {
-    let bounds = merge_bound(&parts[0]);
+fn get_valid_rows(parts: &[&str]) -> Vec<Vec<u32>> {
+    let bounds = merge_bound(parts[0]);
     let mut valid_rows = vec![];
     for line in parts[2].trim().split('\n').skip(1) {
         let row: Vec<u32> = line.split(',').map(|x| x.parse().unwrap()).collect();
@@ -147,4 +147,10 @@ fn get_match_lst(poss: &mut Vec<HashSet<usize>>) -> Vec<usize> {
         i += 1;
         i %= n;
     }
+}
+
+#[test]
+fn test_16() {
+    assert_eq!(19060, part1());
+    assert_eq!(953713095011, part2());
 }
