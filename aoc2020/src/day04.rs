@@ -7,7 +7,7 @@ pub fn part1() -> usize {
         .into_iter()
         .collect();
 
-    let lines = read_lines("./data/day4.txt");
+    let lines = read_lines("./data/day04.txt");
     let mut passport = HashMap::new();
     let mut count = 0usize;
     for line in lines {
@@ -31,7 +31,7 @@ pub fn part2() -> usize {
         .into_iter()
         .collect();
 
-    let lines = read_lines("./data/day4.txt");
+    let lines = read_lines("./data/day04.txt");
 
     let reg_dct = [
         ("byr", r"^(19[2-9]\d|200[0-2])$"),

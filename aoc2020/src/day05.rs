@@ -1,7 +1,7 @@
 use crate::read_lines;
 
 pub fn part1() -> usize {
-    let lines = read_lines("./data/day5.txt");
+    let lines = read_lines("./data/day05.txt");
     lines.iter().map(|x| calc_index(x)).max().unwrap()
 }
 
@@ -18,7 +18,7 @@ fn calc_index(line: &str) -> usize {
 }
 
 pub fn part2() -> usize {
-    let lines = read_lines("./data/day5.txt");
+    let lines = read_lines("./data/day05.txt");
     let mut idxs: Vec<usize> = lines.iter().map(|x| calc_index(x)).collect();
     idxs.sort_unstable();
     for i in 0..idxs.len() - 1 {

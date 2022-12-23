@@ -1,7 +1,7 @@
 use crate::read_lines;
 
 pub fn part1() -> i32 {
-    let lines = read_lines("./data/day1.txt");
+    let lines = read_lines("./data/day01.txt");
     let mut lines: Vec<i32> = lines.into_iter().map(|x| x.parse().unwrap()).collect();
     lines.sort_unstable();
 
@@ -18,7 +18,7 @@ pub fn part1() -> i32 {
 }
 
 pub fn part2() -> i32 {
-    let lines = read_lines("./data/day1.txt");
+    let lines = read_lines("./data/day01.txt");
     let mut lines: Vec<i32> = lines.into_iter().map(|x| x.parse().unwrap()).collect();
     lines.sort_unstable();
 

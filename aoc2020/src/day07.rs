@@ -3,7 +3,7 @@ use regex::Regex;
 use std::collections::{HashMap, HashSet};
 
 pub fn part1() -> usize {
-    let lines = read_lines("./data/day7.txt");
+    let lines = read_lines("./data/day07.txt");
 
     let re = Regex::new(r"(\d+) ([a-z ]+) bag").unwrap();
     let mut dct = HashMap::new();
@@ -35,7 +35,7 @@ pub fn part1() -> usize {
 }
 
 pub fn part2() -> i32 {
-    let lines = read_lines("./data/day7.txt");
+    let lines = read_lines("./data/day07.txt");
 
     let re = Regex::new(r"(\d+) ([a-z ]+) bag").unwrap();
     let mut dct: HashMap<String, Vec<(i32, String)>> = HashMap::new();

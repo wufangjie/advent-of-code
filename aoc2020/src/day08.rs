@@ -18,7 +18,7 @@ fn get_lines() -> Vec<(u8, i32)> {
         )
     };
 
-    read_lines("./data/day8.txt")
+    read_lines("./data/day08.txt")
         .into_iter()
         .map(conv)
         .collect()

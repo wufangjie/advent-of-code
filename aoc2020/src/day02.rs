@@ -3,7 +3,7 @@ use regex::Regex;
 
 pub fn part1() -> usize {
     let re = Regex::new(r"^(\d+)-(\d+) ([a-z]): ([a-z]{1,})$").unwrap();
-    let lines = read_lines("./data/day2.txt");
+    let lines = read_lines("./data/day02.txt");
 
     let mut count_valid = 0;
     for line in lines {
@@ -28,7 +28,7 @@ pub fn part1() -> usize {
 
 pub fn part2() -> usize {
     let re = Regex::new(r"^(\d+)-(\d+) ([a-z]): ([a-z]{1,})$").unwrap();
-    let lines = read_lines("./data/day2.txt");
+    let lines = read_lines("./data/day02.txt");
 
     let mut count_valid = 0;
     for line in lines {

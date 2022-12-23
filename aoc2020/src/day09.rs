@@ -7,7 +7,7 @@ pub fn part1() -> u64 {
 }
 
 fn get_lines_and_invalid() -> (Vec<u64>, usize) {
-    let lines: Vec<u64> = read_lines("./data/day9.txt")
+    let lines: Vec<u64> = read_lines("./data/day09.txt")
         .into_iter()
         .map(|x| x.parse().unwrap())
         .collect();
