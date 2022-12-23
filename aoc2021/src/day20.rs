@@ -4,18 +4,18 @@ use std::fmt;
 // 看到第一个是 #, 我以为是题目错了, 不然整个空间都亮了
 // 想了半天不明白, 最后发现只要最后一个不是 #, 再变一次外面的空间就会再次变暗
 
-pub fn part1() {
+pub fn part1() -> usize {
     let mut iter = read_lines("./data/day20.txt").into_iter();
     let algorithm: Vec<u8> = iter
         .next()
         .unwrap()
         .bytes()
-        .map(|c| if c == b'#' { 1 } else { 0 })
+        .map(|c| u8::from(c == b'#')) //if c == b'#' { 1 } else { 0 })
         .collect();
     let rows: Vec<String> = iter
         .by_ref()
         .skip(1)
-        .take_while(|line| line != "")
+        .take_while(|line| !line.is_empty()) // != "")
         .collect();
 
     let nrow = rows.len();
@@ -31,10 +31,10 @@ pub fn part1() {
 
     let mut img = Image::new(data, algorithm);
     for _ in 0..2 {
-	img.enhance();
-	//dbg!(&img);
+        img.enhance();
+        //dbg!(&img);
     }
-    dbg!(&img.count_lit());
+    img.count_lit()
 }
 
 struct Image {
@@ -104,29 +104,29 @@ impl Image {
 
 impl fmt::Debug for Image {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "\n");
+        writeln!(f)?;
         for i in 2..self.nrow - 2 {
             for j in 2..self.ncol - 2 {
                 write!(f, "{}", if self.data[i][j] == 1 { "#" } else { "." })?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
-        write!(f, "\n")
+        writeln!(f)
     }
 }
 
-pub fn part2() {
+pub fn part2() -> usize {
     let mut iter = read_lines("./data/day20.txt").into_iter();
     let algorithm: Vec<u8> = iter
         .next()
         .unwrap()
         .bytes()
-        .map(|c| if c == b'#' { 1 } else { 0 })
+        .map(|c| u8::from(c == b'#')) //if c == b'#' { 1 } else { 0 })
         .collect();
     let rows: Vec<String> = iter
         .by_ref()
         .skip(1)
-        .take_while(|line| line != "")
+        .take_while(|line| !line.is_empty()) // != "")
         .collect();
 
     let nrow = rows.len();
@@ -142,8 +142,14 @@ pub fn part2() {
 
     let mut img = Image::new(data, algorithm);
     for _ in 0..50 {
-	img.enhance();
-	//dbg!(&img);
+        img.enhance();
+        //dbg!(&img);
     }
-    dbg!(&img.count_lit());
+    img.count_lit()
+}
+
+#[test]
+fn test_20() {
+    assert_eq!(5563, part1());
+    assert_eq!(19743, part2());
 }

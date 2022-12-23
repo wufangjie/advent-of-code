@@ -1,6 +1,6 @@
-use crate::read_lines;
-use regex::Regex;
-use std::collections::HashSet;
+// use crate::read_lines;
+// use regex::Regex;
+// use std::collections::HashSet;
 
 // pub fn part1() {
 //     let lines = read_lines("./data/day24.txt");
@@ -148,9 +148,7 @@ use std::collections::HashSet;
 //     }
 // }
 
-
-
-pub fn part1() {
+pub fn part1() -> i64 {
     let mut w = [0; 14];
     for (j, i, d) in [
         (13, 0, 7), // w[13] == w[0] + 7
@@ -169,14 +167,15 @@ pub fn part1() {
             }
         }
     }
-    dbg!(w
-        .into_iter()
+    (w.into_iter()
         .map(|x| format!("{}", x))
         .collect::<Vec<String>>()
-        .join(""));
+        .join(""))
+    .parse()
+    .unwrap()
 }
 
-pub fn part2() {
+pub fn part2() -> i64 {
     let mut w = [0; 14];
     for (j, i, d) in [
         (13, 0, 7), // w[13] == w[0] + 7
@@ -195,13 +194,13 @@ pub fn part2() {
             }
         }
     }
-    dbg!(w
-        .into_iter()
+    (w.into_iter()
         .map(|x| format!("{}", x))
         .collect::<Vec<String>>()
-        .join(""));
+        .join(""))
+    .parse()
+    .unwrap()
 }
-
 
 // only div_z[], add_x[], add_y[] are different // see day24.py
 // when add_x[i] > 0, there's no possible x == 0
@@ -237,3 +236,9 @@ pub fn part2() {
 // + (w1 + 2) == w12 + 10 #
 
 // (w0 + 14) == w13 + 7 #
+
+#[test]
+fn test_24() {
+    assert_eq!(29989297949519, part1());
+    assert_eq!(19518121316118, part2());
+}

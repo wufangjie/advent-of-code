@@ -1,7 +1,7 @@
 use crate::read_lines;
 
 pub fn part1() -> usize {
-    let lines = read_lines("./data/day3.txt");
+    let lines = read_lines("./data/day03.txt");
     let nrow = lines.len();
     let ncol = lines[0].len();
 
@@ -30,7 +30,7 @@ pub fn part1() -> usize {
 }
 
 pub fn part2() -> usize {
-    let lines = read_lines("./data/day3.txt");
+    let lines = read_lines("./data/day03.txt");
     let ncol = lines[0].len();
 
     let mut trie = Trie::new();
@@ -50,9 +50,9 @@ fn calc_most_common(trie: &Trie, count: usize) -> usize {
         acc <<= 1;
         if node.count[1] >= node.count[0] {
             acc += 1;
-            node = &node.child[1].as_ref().unwrap();
+            node = node.child[1].as_ref().unwrap();
         } else {
-            node = &node.child[0].as_ref().unwrap();
+            node = node.child[0].as_ref().unwrap();
         }
     }
     acc
@@ -63,12 +63,12 @@ fn calc_least_common(trie: &Trie, count: usize) -> usize {
     let mut node = trie;
     for _ in 0..count {
         acc <<= 1;
-        let mut j = if node.count[1] < node.count[0] { 1 } else { 0 };
+        let mut j = usize::from(node.count[1] < node.count[0]); //if node.count[1] < node.count[0] { 1 } else { 0 };
         if node.count[j] == 0 {
             j ^= 1;
         }
         acc += j;
-        node = &node.child[j].as_ref().unwrap();
+        node = node.child[j].as_ref().unwrap();
     }
     acc
 }
@@ -98,4 +98,10 @@ impl Trie {
             node = node.child[j].as_mut().unwrap();
         }
     }
+}
+
+#[test]
+fn test_03() {
+    assert_eq!(2261546, part1());
+    assert_eq!(6775520, part2());
 }

@@ -2,7 +2,7 @@ use crate::read_string;
 
 pub fn part1() -> usize {
     //let position: Vec<usize> = vec![16, 1, 2, 0, 4, 2, 7, 1, 2, 14];
-    let position: Vec<usize> = read_string("./data/day7.txt")
+    let position: Vec<usize> = read_string("./data/day07.txt")
         .unwrap()
         .trim()
         .split(',')
@@ -24,7 +24,7 @@ pub fn part2() -> usize {
     // (x - p0) * (x - p0 + 1) = x^2 + (-2p0 + 1)x - p0
     // which is a convex function
 
-    let position: Vec<usize> = read_string("./data/day7.txt")
+    let position: Vec<usize> = read_string("./data/day07.txt")
         .unwrap()
         .trim()
         .split(',')
@@ -47,7 +47,7 @@ pub fn part2() -> usize {
     calc_convex_min(&position, calc_fuel)
 }
 
-fn calc_convex_min(position: &Vec<usize>, calc_fuel: impl Fn(usize) -> usize) -> usize {
+fn calc_convex_min(position: &[usize], calc_fuel: impl Fn(usize) -> usize) -> usize {
     let avg = position.iter().sum::<usize>() / position.len();
     let mut min_cost: usize = calc_fuel(avg);
 
@@ -76,4 +76,12 @@ fn calc_convex_min(position: &Vec<usize>, calc_fuel: impl Fn(usize) -> usize) ->
         }
         i -= 1;
     }
+}
+
+#[test]
+fn test_07() {
+    // dbg!(part1());
+    // dbg!(part2());
+    assert_eq!(359648, part1());
+    assert_eq!(100727924, part2());
 }

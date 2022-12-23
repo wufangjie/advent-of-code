@@ -4,7 +4,7 @@ use std::collections::{HashMap, HashSet};
 
 pub fn part1() -> usize {
     let valid: HashSet<usize> = [2, 3, 4, 7].into_iter().collect();
-    read_lines("./data/day8.txt")
+    read_lines("./data/day08.txt")
         .into_iter()
         .map(|line| {
             line.split(' ')
@@ -17,7 +17,7 @@ pub fn part1() -> usize {
 }
 
 pub fn part2() -> usize {
-    let lines = read_lines("./data/day8.txt");
+    let lines = read_lines("./data/day08.txt");
     let re = Regex::new(r"([a-g]+)").unwrap();
     let mut acc = 0;
     for line in lines {
@@ -27,7 +27,8 @@ pub fn part2() -> usize {
             .take(10)
             .map(|x| x.get(1).unwrap().as_str())
             .collect();
-        nums.sort_by(|a, b| a.len().cmp(&b.len()));
+        //nums.sort_by(|a, b| a.len().cmp(&b.len()));
+        nums.sort_by_key(|a| a.len());
 
         let mut nums_b = [0u8; 10];
         for (i, s) in nums.iter().enumerate() {
@@ -79,4 +80,12 @@ pub fn part2() -> usize {
         acc += res;
     }
     acc
+}
+
+#[test]
+fn test_08() {
+    // dbg!(part1());
+    // dbg!(part2());
+    assert_eq!(440, part1());
+    assert_eq!(1046281, part2());
 }

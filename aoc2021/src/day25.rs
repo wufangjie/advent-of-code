@@ -45,11 +45,14 @@ impl Mat {
     fn move_east(&mut self) -> usize {
         let mut new = self.data.clone();
         let mut count = 0;
-        for i in 0..self.nrow {
+        //for i in 0..self.nrow {
+        for (i, data_i) in self.data.iter().enumerate() {
             for j in 0..self.ncol {
-                if self.data[i][j] == 1 {
+                //if self.data[i][j] == 1 {
+                if data_i[j] == 1 {
                     let j2 = if j == self.ncol - 1 { 0 } else { j + 1 };
-                    if self.data[i][j2] == 0 {
+                    //if self.data[i][j2] == 0 {
+                    if data_i[j2] == 0 {
                         new[i][j2] = 1;
                         new[i][j] = 0;
                         count += 1
@@ -83,7 +86,7 @@ impl Mat {
 
 impl fmt::Debug for Mat {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "\n")?;
+        writeln!(f)?;
         for i in 0..self.nrow {
             for j in 0..self.ncol {
                 write!(
@@ -97,8 +100,13 @@ impl fmt::Debug for Mat {
                     }
                 )?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
-        write!(f, "\n")
+        writeln!(f)
     }
+}
+
+#[test]
+fn test_25() {
+    assert_eq!(334, part1());
 }

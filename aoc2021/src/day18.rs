@@ -4,8 +4,8 @@ use std::fmt;
 pub fn part1() -> i32 {
     let lines = read_lines("./data/day18.txt");
     let mut num = SFNumber::from_str(&lines[0]);
-    for i in 1..lines.len() {
-        num.add_by(SFNumber::from_str(&lines[i]));
+    for line in lines.iter().skip(1) {
+        num.add_by(SFNumber::from_str(line));
         num.reduce();
         //println!("{}", num);
     }
@@ -145,14 +145,15 @@ impl SFNumber {
 
         loop {
             let splits = self.find_splits();
-            if splits.len() == 0 {
+            if splits.is_empty() {
                 break;
             } else {
                 let mut to_split = splits[0];
                 if splits[0].1 < 4 {
-                    for i in 1..splits.len() {
-                        if splits[i].1 > 4 {
-                            to_split = splits[i];
+                    for split_i in splits.iter().skip(1) {
+                        //1..splits.len() {
+                        if split_i.1 > 4 {
+                            to_split = *split_i;
                             break;
                         }
                     }
@@ -210,7 +211,7 @@ impl fmt::Display for SFNumber {
 }
 
 #[test]
-fn test_18() {
+fn test_18_2() {
     let mut n1 = SFNumber::from_str("[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]");
     n1.reduce();
     assert_eq!(
@@ -230,8 +231,10 @@ pub fn part2() -> i32 {
     let mut best = 0;
     for i in 0..n - 1 {
         let num = SFNumber::from_str(&lines[i]);
-        for j in i + 1..n {
-            let num2 = SFNumber::from_str(&lines[j]);
+        for line_j in lines.iter().skip(i + 1) {
+            let num2 = SFNumber::from_str(line_j);
+            //for j in i + 1..n {
+            //let num2 = SFNumber::from_str(&lines[j]);
             for mut tmp in [num.add(&num2), num2.add(&num)] {
                 tmp.reduce();
                 best = best.max(tmp.calc_magnitude());
@@ -239,4 +242,10 @@ pub fn part2() -> i32 {
         }
     }
     best
+}
+
+#[test]
+fn test_18() {
+    assert_eq!(3884, part1());
+    assert_eq!(4595, part2());
 }

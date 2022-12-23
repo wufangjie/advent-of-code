@@ -84,3 +84,11 @@ pub fn part2() -> usize {
     scores.sort_unstable();
     scores[scores.len() >> 1]
 }
+
+#[test]
+fn test_10() {
+    // dbg!(part1());
+    // dbg!(part2());
+    assert_eq!(168417, part1());
+    assert_eq!(2802519786, part2());
+}

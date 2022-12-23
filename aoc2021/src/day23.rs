@@ -21,14 +21,25 @@ const EPM: [usize; 4] = [1, 10, 100, 1000]; // energy cost per move
 
 pub fn part2() -> usize {
     let m = Machine::new([
+        // test data part1
         // [b'A', b'B'],
         // [b'D', b'C'],
         // [b'C', b'B'],
         // [b'A', b'D'],
+
+        // test data part2
         // [b'A', b'D', b'D', b'B'],
         // [b'D', b'B', b'C', b'C'],
         // [b'C', b'A', b'B', b'B'],
         // [b'A', b'C', b'A', b'D'],
+
+        // part1 const N: usize = 2;
+        // [b'D', b'C'],
+        // [b'D', b'C'],
+        // [b'B', b'A'],
+        // [b'A', b'B'],
+
+        // part2 const N: usize = 4;
         [b'D', b'D', b'D', b'C'],
         [b'D', b'B', b'C', b'C'],
         [b'B', b'A', b'B', b'A'],
@@ -284,8 +295,8 @@ impl Machine {
 
 impl fmt::Debug for Machine {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "cost({})\n", self.cost)?;
-        write!(f, "#############\n")?;
+        writeln!(f, "cost({})", self.cost)?;
+        writeln!(f, "#############")?;
         write!(f, "#")?;
         for c in self.hallway {
             if c == b' ' {
@@ -294,7 +305,7 @@ impl fmt::Debug for Machine {
                 write!(f, "{}", c as char)?;
             }
         }
-        write!(f, "#\n")?;
+        writeln!(f, "#")?;
         write!(f, "###")?;
         for i in 0..4 {
             let c = self.abcd[i][N - 1];
@@ -305,7 +316,7 @@ impl fmt::Debug for Machine {
             }
             write!(f, "#")?;
         }
-        write!(f, "##\n")?;
+        writeln!(f, "##")?;
         for j in 0..N - 1 {
             write!(f, "  #")?;
             for i in 0..4 {
@@ -317,8 +328,14 @@ impl fmt::Debug for Machine {
                 }
                 write!(f, "#")?;
             }
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
         write!(f, "  #########")
     }
+}
+
+#[test]
+fn test_23() {
+    //assert_eq!(18282, part2());
+    assert_eq!(50132, part2());
 }

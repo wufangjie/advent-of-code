@@ -1,7 +1,7 @@
 use crate::read_lines;
 
 pub fn part1() -> i32 {
-    let rows = read_lines("./data/day2.txt");
+    let rows = read_lines("./data/day02.txt");
     let mut x = 0;
     let mut y = 0;
     for row in rows {
@@ -18,7 +18,7 @@ pub fn part1() -> i32 {
 }
 
 pub fn part2() -> i32 {
-    let rows = read_lines("./data/day2.txt");
+    let rows = read_lines("./data/day02.txt");
     let mut x = 0;
     let mut y = 0;
     let mut aim = 0;
@@ -36,4 +36,10 @@ pub fn part2() -> i32 {
         }
     }
     x * y
+}
+
+#[test]
+fn test_02() {
+    assert_eq!(2150351, part1());
+    assert_eq!(1842742223, part2());
 }

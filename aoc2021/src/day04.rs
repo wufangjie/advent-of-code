@@ -3,14 +3,16 @@ use std::collections::HashMap;
 
 const N: usize = 5;
 
-fn parse_lines() -> (Vec<i32>, Vec<HashMap<i32, (usize, usize)>>, Vec<i32>) {
-    let lines = read_lines("./data/day4.txt");
+type DctLst = Vec<HashMap<i32, (usize, usize)>>;
+
+fn parse_lines() -> (Vec<i32>, DctLst, Vec<i32>) {
+    let lines = read_lines("./data/day04.txt");
     let seq: Vec<i32> = lines[0].split(',').map(|x| x.parse().unwrap()).collect();
     let n = (lines.len() - 1) / 6;
     let mut dct_lst = Vec::with_capacity(n);
     let mut sum_lst = Vec::with_capacity(n);
-    let mut dct = HashMap::new();
     for i0 in (2..lines.len()).into_iter().step_by(N + 1) {
+        let mut dct = HashMap::new();
         let mut sum = 0;
         for i in 0..N {
             for j in 0..N {
@@ -24,7 +26,6 @@ fn parse_lines() -> (Vec<i32>, Vec<HashMap<i32, (usize, usize)>>, Vec<i32>) {
         }
         sum_lst.push(sum);
         dct_lst.push(dct);
-        dct = HashMap::new();
     }
     (seq, dct_lst, sum_lst)
 }
@@ -73,4 +74,10 @@ pub fn part2() -> i32 {
         }
     }
     unreachable!();
+}
+
+#[test]
+fn test_04() {
+    assert_eq!(38913, part1());
+    assert_eq!(16836, part2());
 }

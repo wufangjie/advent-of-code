@@ -35,7 +35,7 @@ pub fn part1() -> usize {
 
 pub fn part2() -> usize {
     let lines = read_lines("./data/day14.txt");
-    let mut polymer: Vec<u8> = lines[0].bytes().collect();
+    let polymer: Vec<u8> = lines[0].bytes().collect();
     let mut polymer_pair = HashMap::new();
     for i in 0..polymer.len() - 1 {
         *polymer_pair
@@ -49,7 +49,7 @@ pub fn part2() -> usize {
         rules.insert((bytes[0], bytes[1]), bytes[6]);
     }
 
-    for i in 0..40 {
+    for _i in 0..40 {
         let mut polymer_pair2 = HashMap::new();
         for (k, v) in polymer_pair {
             let mid = rules.get(&k);
@@ -69,4 +69,10 @@ pub fn part2() -> usize {
     }
     *count.entry(polymer[0]).or_insert(0) += 1; // add first one
     count.values().max().unwrap() - count.values().min().unwrap()
+}
+
+#[test]
+fn test_14() {
+    assert_eq!(2891, part1());
+    assert_eq!(4607749009683, part2());
 }

@@ -6,8 +6,8 @@ pub fn part1() -> usize {
     let mut connect: HashMap<&str, HashSet<&str>> = HashMap::new();
     for row in lines.iter() {
         let pair: Vec<&str> = row.split('-').collect();
-        (*connect.entry(pair[0]).or_insert(HashSet::new())).insert(pair[1]);
-        (*connect.entry(pair[1]).or_insert(HashSet::new())).insert(pair[0]);
+        (*connect.entry(pair[0]).or_insert_with(HashSet::new)).insert(pair[1]);
+        (*connect.entry(pair[1]).or_insert_with(HashSet::new)).insert(pair[0]);
     }
 
     let mut visited = HashSet::new();
@@ -38,8 +38,8 @@ pub fn part2() -> usize {
     let mut connect: HashMap<&str, HashSet<&str>> = HashMap::new();
     for row in lines.iter() {
         let pair: Vec<&str> = row.split('-').collect();
-        (*connect.entry(pair[0]).or_insert(HashSet::new())).insert(pair[1]);
-        (*connect.entry(pair[1]).or_insert(HashSet::new())).insert(pair[0]);
+        (*connect.entry(pair[0]).or_insert_with(HashSet::new)).insert(pair[1]);
+        (*connect.entry(pair[1]).or_insert_with(HashSet::new)).insert(pair[0]);
     }
 
     let mut visited = HashSet::new();
@@ -54,11 +54,12 @@ fn dfs2(
     connect: &HashMap<&str, HashSet<&str>>,
 ) -> usize {
     if p == "end" {
-        if single_cave == "" || single_cave == "#" {
-            1
-        } else {
-            0
-        }
+        usize::from(single_cave.is_empty() || single_cave == "#")
+        // if single_cave.is_empty() || single_cave == "#" {
+        //     1
+        // } else {
+        //     0
+        // }
     } else {
         let mut acc = 0;
         for p2 in connect.get(&p).unwrap() {
@@ -72,11 +73,19 @@ fn dfs2(
                 } else {
                     acc += dfs2(p2, single_cave, visited2, connect);
                 }
-                if single_cave == "" && *p2 >= "a" && *p2 != "end" {
-                    acc += dfs2(p2, *p2, visited.clone(), connect);
+                if single_cave.is_empty() && *p2 >= "a" && *p2 != "end" {
+                    acc += dfs2(p2, p2, visited.clone(), connect);
                 }
             }
         }
         acc
     }
+}
+
+#[test]
+fn test_12() {
+    // dbg!(part1());
+    // dbg!(part2());
+    assert_eq!(4773, part1());
+    assert_eq!(116985, part2());
 }

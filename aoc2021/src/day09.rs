@@ -2,7 +2,7 @@ use crate::read_lines;
 use utils::Heap;
 
 pub fn part1() -> usize {
-    let map: Vec<Vec<u8>> = read_lines("./data/day9.txt")
+    let map: Vec<Vec<u8>> = read_lines("./data/day09.txt")
         .into_iter()
         .map(|row| row.bytes().collect::<Vec<u8>>())
         .collect();
@@ -18,7 +18,7 @@ pub fn part1() -> usize {
     risk_levels
 }
 
-fn get_risk_level(map: &Vec<Vec<u8>>, i: usize, j: usize) -> usize {
+fn get_risk_level(map: &[Vec<u8>], i: usize, j: usize) -> usize {
     if i > 0 && map[i - 1][j] <= map[i][j] {
         return 0;
     }
@@ -37,7 +37,7 @@ fn get_risk_level(map: &Vec<Vec<u8>>, i: usize, j: usize) -> usize {
 //const N9: u8 = b'9';
 
 pub fn part2() -> usize {
-    let map: Vec<Vec<u8>> = read_lines("./data/day9.txt")
+    let map: Vec<Vec<u8>> = read_lines("./data/day09.txt")
         .into_iter()
         .map(|row| row.bytes().collect::<Vec<u8>>())
         .collect();
@@ -66,7 +66,7 @@ pub fn part2() -> usize {
     ret
 }
 
-fn dfs(map: &Vec<Vec<u8>>, visited: &mut Vec<Vec<bool>>, i: usize, j: usize) -> usize {
+fn dfs(map: &[Vec<u8>], visited: &mut [Vec<bool>], i: usize, j: usize) -> usize {
     visited[i][j] = true;
     let mut ret = 1;
     if i > 0 && map[i - 1][j] != b'9' && !visited[i - 1][j] {
@@ -82,4 +82,12 @@ fn dfs(map: &Vec<Vec<u8>>, visited: &mut Vec<Vec<bool>>, i: usize, j: usize) -> 
         ret += dfs(map, visited, i, j + 1);
     }
     ret
+}
+
+#[test]
+fn test_09() {
+    // dbg!(part1());
+    // dbg!(part2());
+    assert_eq!(554, part1());
+    assert_eq!(1017792, part2());
 }

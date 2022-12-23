@@ -11,14 +11,14 @@ pub fn part2() -> usize {
 }
 
 fn count_fish(days: usize) -> usize {
-    let lines = read_lines("./data/day6.txt");
+    let lines = read_lines("./data/day06.txt");
 
     let mut timer = [0; N];
     for s in lines[0].split(',') {
         timer[s.parse::<usize>().unwrap()] += 1;
     }
 
-    for i in 0..days {
+    for _ in 0..days {
         let to_create = timer[0];
         for j in 0..N - 1 {
             timer[j] = timer[j + 1];
@@ -27,4 +27,13 @@ fn count_fish(days: usize) -> usize {
         timer[6] += to_create;
     }
     timer.into_iter().sum()
+}
+
+#[test]
+fn test_06() {
+    // dbg!(part1());
+    // dbg!(part2());
+
+    assert_eq!(349549, part1());
+    assert_eq!(1589590444365, part2());
 }

@@ -1,5 +1,5 @@
 use crate::read_lines;
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashSet, VecDeque}; // HashMap,
 use std::fmt;
 use std::hash::Hash;
 
@@ -16,7 +16,7 @@ pub fn part1() -> usize {
     let mut xyz_lst = vec![];
     loop {
         let part = read_part(iter.by_ref());
-        if part.len() == 0 {
+        if part.is_empty() {
             break;
         }
         xyz_lst.push(part);
@@ -29,7 +29,7 @@ pub fn part1() -> usize {
     'main: while let Some(i) = left.pop_front() {
         for &j in arranged.iter().rev() {
             //conv.keys() {
-            let (r2, d2, p2) = find_abs_pos(&xyz_lst[i], &xyz_lst[j]);
+            let (r2, _d2, p2) = find_abs_pos(&xyz_lst[i], &xyz_lst[j]);
             if r2 < ORI {
                 xyz_lst[i] = p2;
                 arranged.push(i);
@@ -65,8 +65,8 @@ pub fn part1() -> usize {
 
 fn read_part(iter: &mut impl Iterator<Item = String>) -> Vec<Dim3> {
     iter.skip(1)
-        .take_while(|x| x != "")
-        .map(|x| Dim3::from_string(x))
+        .take_while(|x| !x.is_empty())
+        .map(Dim3::from_string)
         .collect()
 }
 
@@ -158,7 +158,7 @@ impl Dim3 {
     }
 }
 
-fn find_abs_pos(pos: &Vec<Dim3>, lst0: &Vec<Dim3>) -> (u8, Dim3, Vec<Dim3>) {
+fn find_abs_pos(pos: &[Dim3], lst0: &Vec<Dim3>) -> (u8, Dim3, Vec<Dim3>) {
     let set0: HashSet<Dim3> = lst0.iter().cloned().collect();
     for which in 0..ORI {
         let pos_r: Vec<Dim3> = pos.iter().map(|triple| triple.rotate(which)).collect();
@@ -176,8 +176,10 @@ fn find_abs_pos(pos: &Vec<Dim3>, lst0: &Vec<Dim3>) -> (u8, Dim3, Vec<Dim3>) {
 fn find_delta(pos: &Vec<Dim3>, lst0: &Vec<Dim3>, set0: &HashSet<Dim3>) -> Option<Dim3> {
     let mut delta_used = HashSet::new();
     for i in 0..pos.len() {
-        for j in 0..lst0.len() {
-            let delta = lst0[j].sub(&pos[i]);
+        for lst_j in lst0 {
+            //for j in 0..lst0.len() {
+            let delta = lst_j.sub(&pos[i]);
+            //let delta = lst0[j].sub(&pos[i]);
             if !delta_used.contains(&delta) {
                 delta_used.insert(delta);
                 let count = count_overlap(pos, delta, set0);
@@ -190,14 +192,15 @@ fn find_delta(pos: &Vec<Dim3>, lst0: &Vec<Dim3>, set0: &HashSet<Dim3>) -> Option
     None
 }
 
-fn count_overlap(pos: &Vec<Dim3>, delta: Dim3, set0: &HashSet<Dim3>) -> usize {
+fn count_overlap(pos: &[Dim3], delta: Dim3, set0: &HashSet<Dim3>) -> usize {
     pos.iter()
         .map(|triple| {
-            if set0.contains(&(triple.add(&delta))) {
-                1
-            } else {
-                0
-            }
+            usize::from(set0.contains(&(triple.add(&delta))))
+            // if set0.contains(&(triple.add(&delta))) {
+            //     1
+            // } else {
+            //     0
+            // }
         })
         .sum()
 }
@@ -209,7 +212,7 @@ pub fn part2() -> i32 {
     let mut xyz_lst = vec![];
     loop {
         let part = read_part(iter.by_ref());
-        if part.len() == 0 {
+        if part.is_empty() {
             break;
         }
         xyz_lst.push(part);
@@ -258,3 +261,10 @@ pub fn part2() -> i32 {
 //     }
 //     pos
 // }
+
+#[test]
+fn test_19() {
+    // NOTE: very slow
+    assert_eq!(462, part1());
+    assert_eq!(12158, part2());
+}

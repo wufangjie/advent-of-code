@@ -5,7 +5,7 @@ const N: usize = 1000;
 
 pub fn part1() -> usize {
     let re = Regex::new(r"^(\d+),(\d+) -> (\d+),(\d+)$").unwrap();
-    let lines = read_lines("./data/day5.txt");
+    let lines = read_lines("./data/day05.txt");
 
     let mut count = [[0u16; N]; N];
     for line in lines {
@@ -40,20 +40,15 @@ fn counting(count: &mut [[u16; N]; N], xyxy: Vec<i16>) {
 }
 
 fn count_by(count: &[[u16; N]; N], filter: impl Fn(u16) -> bool) -> usize {
-    let mut ret = 0;
-    for i in 0..N {
-        for j in 0..N {
-            if filter(count[j][i]) {
-                ret += 1;
-            }
-        }
-    }
-    ret
+    count
+        .iter()
+        .map(|row| row.iter().filter(|&&item| filter(item)).count())
+        .sum()
 }
 
 pub fn part2() -> usize {
     let re = Regex::new(r"^(\d+),(\d+) -> (\d+),(\d+)$").unwrap();
-    let lines = read_lines("./data/day5.txt");
+    let lines = read_lines("./data/day05.txt");
 
     let mut count = [[0u16; N]; N];
     for line in lines {
@@ -65,4 +60,10 @@ pub fn part2() -> usize {
         counting(&mut count, xyxy);
     }
     count_by(&count, |x| x > 1)
+}
+
+#[test]
+fn test_05() {
+    assert_eq!(6687, part1());
+    assert_eq!(19851, part2());
 }

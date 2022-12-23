@@ -9,10 +9,8 @@ pub fn part1() -> usize {
     loop {
         if p1.next() {
             return (p1.count + p2.count) * p2.score;
-        } else {
-            if p2.next() {
-                return (p1.count + p2.count) * p1.score;
-            }
+        } else if p2.next() {
+            return (p1.count + p2.count) * p1.score;
         }
     }
 }
@@ -51,10 +49,10 @@ impl Player {
     }
 }
 
-pub fn part2() {
+pub fn part2() -> usize {
     let mut game = Game::new();
     // dbg!(game.count(4, 0, 8, 0));
-    dbg!(game.count(8, 0, 10, 0));
+    game.count(8, 0, 10, 0).0
 }
 
 struct Game {
@@ -96,4 +94,10 @@ impl Game {
         self.cache.insert((p1, s1, p2, s2), (c1s, c2s));
         (c1s, c2s)
     }
+}
+
+#[test]
+fn test_21() {
+    assert_eq!(605070, part1());
+    assert_eq!(218433063958910, part2());
 }

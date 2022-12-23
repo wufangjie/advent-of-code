@@ -9,21 +9,35 @@ pub fn part1() -> usize {
     let ncol = lines[0].len();
     let mut count = 0;
 
-    for step in 0..100 {
+    for _step in 0..100 {
         let mut stack = vec![];
-        for i in 0..nrow {
-            for j in 0..ncol {
-                if lines[i][j] == 10 {
-                    lines[i][j] = 1;
+        for (i, row) in lines.iter_mut().enumerate() {
+            for (j, item) in row.iter_mut().enumerate() {
+                if *item == 10 {
+                    *item = 1;
                 } else {
-                    lines[i][j] += 1;
-                    if lines[i][j] == 10 {
+                    *item += 1;
+                    if *item == 10 {
                         count += 1;
                         stack.push((i, j));
                     }
                 }
             }
         }
+
+        // for i in 0..nrow {
+        //     for j in 0..ncol {
+        //         if lines[i][j] == 10 {
+        //             lines[i][j] = 1;
+        //         } else {
+        //             lines[i][j] += 1;
+        //             if lines[i][j] == 10 {
+        //                 count += 1;
+        //                 stack.push((i, j));
+        //             }
+        //         }
+        //     }
+        // }
         while let Some((i, j)) = stack.pop() {
             // assert nrow, ncol >> 2
             let range_i = if i == 0 {
@@ -69,19 +83,32 @@ pub fn part2() -> usize {
         step += 1;
         let mut step_flash_count = 0;
         let mut stack = vec![];
-        for i in 0..nrow {
-            for j in 0..ncol {
-                if lines[i][j] == 10 {
-                    lines[i][j] = 1;
+        for (i, row) in lines.iter_mut().enumerate() {
+            for (j, item) in row.iter_mut().enumerate() {
+                if *item == 10 {
+                    *item = 1;
                 } else {
-                    lines[i][j] += 1;
-                    if lines[i][j] == 10 {
+                    *item += 1;
+                    if *item == 10 {
                         step_flash_count += 1;
                         stack.push((i, j));
                     }
                 }
             }
         }
+        // for i in 0..nrow {
+        //     for j in 0..ncol {
+        //         if lines[i][j] == 10 {
+        //             lines[i][j] = 1;
+        //         } else {
+        //             lines[i][j] += 1;
+        //             if lines[i][j] == 10 {
+        //                 step_flash_count += 1;
+        //                 stack.push((i, j));
+        //             }
+        //         }
+        //     }
+        // }
         while let Some((i, j)) = stack.pop() {
             // assert nrow, ncol >> 2
             let range_i = if i == 0 {
@@ -115,4 +142,12 @@ pub fn part2() -> usize {
             return step;
         }
     }
+}
+
+#[test]
+fn test_11() {
+    // dbg!(part1());
+    // dbg!(part2());
+    assert_eq!(1697, part1());
+    assert_eq!(344, part2());
 }

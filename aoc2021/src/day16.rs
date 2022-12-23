@@ -106,7 +106,7 @@ pub fn part2() -> usize {
 }
 
 fn parse_bits_with_op(iter: &mut impl Iterator<Item = u8>) -> (usize, usize) {
-    let ver = calc_chunks(iter.by_ref(), 3);
+    let _ver = calc_chunks(iter.by_ref(), 3);
     let typ = calc_chunks(iter.by_ref(), 3);
     let mut cur = 6;
     let mut num = 0;
@@ -171,4 +171,10 @@ fn test_16_2() {
     assert_eq!(0, f("F600BC2D8F"));
     assert_eq!(0, f("9C005AC2F8F0"));
     assert_eq!(1, f("9C0141080250320F1802104A08"));
+}
+
+#[test]
+fn test_16() {
+    assert_eq!(883, part1());
+    assert_eq!(1675198555015, part2());
 }
