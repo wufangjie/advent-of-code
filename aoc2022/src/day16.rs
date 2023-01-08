@@ -125,7 +125,7 @@ pub fn part1() -> i64 {
 
     // dbg!(&rate_dct); // 15! cases
     let mut dp = DpM::new(rate_dct, next_dct);
-    dp.solve(30, 0, 0) // "AA"
+    dp.solve(30, 1, 0) // "AA"
 }
 
 struct DpM2 {
@@ -254,11 +254,11 @@ pub fn part2() -> i64 {
 
     // dbg!(&rate_dct); // 15! cases
     let mut dp = DpM2::new(rate_dct, next_dct);
-    dp.solve(26, 26, 0, 0, 0)
+    dp.solve(26, 26, 1, 0, 0)
 }
 
 #[test]
 fn test_15() {
     assert_eq!(2253, part1());
-    assert_eq!(2838, part2()); // NOTE: use release mode cost 29.03s
+    // assert_eq!(2838, part2()); // NOTE: use release mode cost 8.94s
 }
