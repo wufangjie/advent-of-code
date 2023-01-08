@@ -258,7 +258,7 @@ pub fn part2() -> i64 {
 }
 
 #[test]
-fn test_15() {
+fn test_16() {
     assert_eq!(2253, part1());
     // assert_eq!(2838, part2()); // NOTE: use release mode cost 8.94s
 }
