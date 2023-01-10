@@ -35,7 +35,6 @@ fn one_pass(
     step0: usize,
     dct: &HashSet<(usize, usize, u8)>,
 ) -> usize {
-    //let (yy, xx) = (nrow - 1, ncol - 2); // target point
     let mut snap_lst = vec![]; //lst];
     let nrow = yy.max(i) + 1;
     let ncol = xx.max(j) + 2;
@@ -57,7 +56,7 @@ fn one_pass(
         }
         if step - step0 == snap_lst.len() {
             // println!("{}", step);
-            snap_lst.push(add_snap(&dct, step + 1, nrow, ncol));
+            snap_lst.push(add_snap(dct, step + 1, nrow, ncol));
             // print_snap(&snap_lst[step]);
         }
 
@@ -115,6 +114,7 @@ fn add_snap(
     lst
 }
 
+#[allow(dead_code)]
 fn print_snap(lst: &[Vec<u8>]) {
     for line in lst {
         for c in line {
@@ -155,6 +155,6 @@ pub fn part2() -> usize {
 
 #[test]
 fn test_24() {
-    assert_eq!(314, part1()); // release mode
-    assert_eq!(896, part2()); // release mode 0.80s
+    assert_eq!(314, part1());
+    assert_eq!(896, part2());
 }
